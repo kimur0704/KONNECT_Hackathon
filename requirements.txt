@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pydantic
+pyjwt
+passlib[bcrypt]
+bcrypt==4.0.1
+python-dotenv
+google-genai
