@@ -243,7 +243,14 @@ export default {
       }
 
       if (url.pathname === "/api/posts" && request.method === "GET") {
-        return json({ success: true, posts });
+        const singerName = url.searchParams.get("singerName");
+        const category = url.searchParams.get("category");
+        const filteredPosts = posts.filter((post) => {
+          const matchesSinger = !singerName || singerName === "전체" || post.singerName === singerName;
+          const matchesCategory = !category || category === "전체" || post.category === category;
+          return matchesSinger && matchesCategory;
+        });
+        return json({ success: true, posts: filteredPosts });
       }
 
       if (url.pathname === "/api/posts" && request.method === "POST") {
