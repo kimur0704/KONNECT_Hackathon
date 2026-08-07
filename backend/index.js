@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import postsRouter from "./routes/posts.js";
 import schedulesRouter from "./routes/schedules.js";
 import userRouter from "./routes/user.js";
+import votesRouter from "./routes/votes.js";
+import gatheringsRouter from "./routes/gatherings.js";
+import hallRouter from "./routes/hall.js";
 
 dotenv.config();
 
@@ -21,6 +24,9 @@ app.get("/api/health", (req, res) => {
 app.use("/api/posts", postsRouter);
 app.use("/api/schedules", schedulesRouter);
 app.use("/api/user", userRouter);
+app.use("/api/votes", votesRouter);
+app.use("/api/gatherings", gatheringsRouter);
+app.use("/api/hall", hallRouter);
 
 app.listen(PORT, () => {
   console.log(`Server: http://localhost:${PORT}`);
