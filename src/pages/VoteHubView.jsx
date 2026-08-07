@@ -171,6 +171,10 @@ const sizeLabels = {
   large: '크게',
 }
 
+const thanksClips = {
+  임영웅: '/artists/lim-youngwoong-thanks.gif',
+}
+
 export default function VoteHubView({
   language,
   setLanguage,
@@ -190,6 +194,7 @@ export default function VoteHubView({
   const [showThanksClip, setShowThanksClip] = useState(false)
 
   const dict = useMemo(() => translations[language] || translations.ko, [language])
+  const thanksClipSrc = thanksClips[singerName]
   const wrapperStyle = {
     minHeight: '100vh',
     padding: '20px 18px 90px',
@@ -428,17 +433,21 @@ export default function VoteHubView({
         <div className="thanks-clip-overlay" role="dialog" aria-modal="true" aria-label={dict.thanksClipBadge}>
           <div className="thanks-clip-card">
             <div className="thanks-clip-video" aria-hidden="true">
-              <div className="thanks-clip-stage">
-                <div className="thanks-clip-spotlight" />
-                <div className="thanks-clip-avatar">
-                  {singerName.slice(0, 1)}
+              {thanksClipSrc ? (
+                <img className="thanks-clip-gif" src={thanksClipSrc} alt="" />
+              ) : (
+                <div className="thanks-clip-stage">
+                  <div className="thanks-clip-spotlight" />
+                  <div className="thanks-clip-avatar">
+                    {singerName.slice(0, 1)}
+                  </div>
+                  <div className="thanks-clip-hearts">
+                    <span>💜</span>
+                    <span>✨</span>
+                    <span>💙</span>
+                  </div>
                 </div>
-                <div className="thanks-clip-hearts">
-                  <span>💜</span>
-                  <span>✨</span>
-                  <span>💙</span>
-                </div>
-              </div>
+              )}
               <div className="thanks-clip-progress" />
             </div>
 

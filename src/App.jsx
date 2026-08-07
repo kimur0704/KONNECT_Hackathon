@@ -5,29 +5,53 @@ import VoteHubView from './pages/VoteHubView'
 const initialFavoriteSingers = [
   {
     id: 1,
-    name: '윤하늘',
-    initial: '윤',
+    name: '임영웅',
+    initial: '임',
+    photo: '/artists/lim-youngwoong.png',
     fanDays: 327,
     color: 'purple',
     schedule: '오늘 오후 8시 음악방송',
   },
   {
     id: 2,
-    name: '김별빛',
-    initial: '김',
+    name: '송가인',
+    initial: '송',
+    photo: '/artists/song-gain.png',
     fanDays: 152,
     color: 'pink',
     schedule: '내일 오후 7시 라이브 방송',
   },
   {
     id: 3,
-    name: '박다정',
-    initial: '박',
+    name: '장윤정',
+    initial: '장',
+    photo: '/artists/jang-yoonjeong.png',
     fanDays: 48,
     color: 'blue',
     schedule: '8월 10일 콘서트 예매',
   },
 ]
+
+const defaultSingerNameMap = {
+  '윤하늘': { name: '임영웅', initial: '임', photo: '/artists/lim-youngwoong.png' },
+  '임영웅': { name: '임영웅', initial: '임', photo: '/artists/lim-youngwoong.png' },
+  '김별빛': { name: '송가인', initial: '송', photo: '/artists/song-gain.png' },
+  '송가인': { name: '송가인', initial: '송', photo: '/artists/song-gain.png' },
+  '박다정': { name: '장윤정', initial: '장', photo: '/artists/jang-yoonjeong.png' },
+  '장윤정': { name: '장윤정', initial: '장', photo: '/artists/jang-yoonjeong.png' },
+}
+
+const migrateFavoriteSingers = (singers) =>
+  singers.map((singer) => {
+    const nextSinger = defaultSingerNameMap[singer.name]
+
+    if (!nextSinger) return singer
+
+    return {
+      ...singer,
+      ...nextSinger,
+    }
+  })
 
 const translations = {
   ko: {
@@ -986,6 +1010,20 @@ function HeaderActions({ languageLabel, aiLabel, onLanguage, onAiHelp }) {
   )
 }
 
+function SingerAvatar({ singer }) {
+  const [imageError, setImageError] = useState(false)
+
+  if (singer.photo && !imageError) {
+    return (
+      <div className="singer-avatar photo">
+        <img src={singer.photo} alt={`${singer.name} profile`} onError={() => setImageError(true)} />
+      </div>
+    )
+  }
+
+  return <div className="singer-avatar">{singer.initial}</div>
+}
+
 function AiHelpPage({ onBack, dict }) {
   return (
     <div className="app">
@@ -1378,7 +1416,7 @@ function App() {
 
     if (savedSingers) {
       try {
-        return JSON.parse(savedSingers)
+        return migrateFavoriteSingers(JSON.parse(savedSingers))
       } catch {
         return initialFavoriteSingers
       }
@@ -1826,7 +1864,7 @@ function App() {
               favoriteSingers.map((singer) => (
                 <article key={singer.id} className={`artist-card ${singer.color}`}>
                   <button className="artist-card-main" type="button" onClick={() => openSingerFandom(singer)}>
-                    <div className="singer-avatar">{singer.initial}</div>
+                    <SingerAvatar singer={singer} />
 
                     <div className="artist-card-content">
                       <p>{dict.togetherDays} {singer.fanDays}{dict.days}</p>

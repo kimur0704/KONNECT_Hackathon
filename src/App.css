@@ -245,6 +245,7 @@ button:focus-visible {
 
 .singer-avatar {
   display: flex;
+  overflow: hidden;
   width: 55px;
   height: 55px;
   flex-shrink: 0;
@@ -255,6 +256,16 @@ button:focus-visible {
   background: rgba(255, 255, 255, 0.23);
   font-size: 22px;
   font-weight: 800;
+}
+
+.singer-avatar.photo {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.singer-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .singer-avatar.large {
@@ -1452,6 +1463,13 @@ button:focus-visible {
   background:
     radial-gradient(circle at 50% 32%, rgba(255, 255, 255, 0.72), transparent 24%),
     linear-gradient(135deg, #6d3ba2, #b65fc1 52%, #476aa3);
+}
+
+.thanks-clip-gif {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .thanks-clip-stage {
