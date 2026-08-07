@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 
 const translations = {
   ko: {
@@ -33,7 +33,7 @@ const translations = {
     certifyPlaceholder: '인증글 제목을 입력해 주세요',
     certifyContent: '감사 멘트를 남겨 주세요',
     certifySubmit: '인증글 등록',
-    certifyDone: '인증글이 등록되었습니다. 팬덤 기록에 반영됩니다.',
+    certifyDone: '인증글이 등록되었습니다. 팬덤 기록 및 명예의 전당에 반영됩니다.',
     openHall: '명예의 전당 보기',
     openLanguage: '언어 설정',
     openFont: '글자 크기',
@@ -137,7 +137,7 @@ const translations = {
     hallFanLabel: '粉丝活动',
     hallBottom: '排行综合投票、认证和线下活动参与数据。',
     languageTitle: '语言设置',
-    fontTitle: '字体大小',
+    fontTitle: '语言设置',
     myPageTitle: '我的页面',
     myPageSubtitle: '无需登录，也可以展示个人资料和粉丝活动的位置。',
     profileLabel: '个人信息',
@@ -185,13 +185,40 @@ export default function VoteHubView({
   initialView = 'home',
   settingsOnly = false,
   singerName = '우리 가수',
-  rankingItems = [],
 }) {
   const [view, setView] = useState(initialView)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [posted, setPosted] = useState(false)
   const [showThanksClip, setShowThanksClip] = useState(false)
+
+  // 백엔드 실시간 랭킹 데이터 상태
+  const [backendRankings, setBackendRankings] = useState([])
+  const [loadingRankings, setLoadingRankings] = useState(false)
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
+  // 백엔드에서 실시간 명예의 전당 랭킹 가져오기
+  const fetchRankings = async () => {
+    setLoadingRankings(true)
+    try {
+      const res = await fetch(`${API_URL}/api/rankings`)
+      const data = await res.json()
+      if (data.success) {
+        setBackendRankings(data.rankings)
+      }
+    } catch (err) {
+      console.error('명예의 전당 불러오기 에러:', err)
+    } finally {
+      setLoadingRankings(false)
+    }
+  }
+
+  useEffect(() => {
+    if (view === 'hall') {
+      fetchRankings()
+    }
+  }, [view])
 
   const dict = useMemo(() => translations[language] || translations.ko, [language])
   const thanksClipSrc = thanksClips[singerName]
@@ -203,7 +230,8 @@ export default function VoteHubView({
     fontSize: sizeMap[fontSize] || sizeMap.default,
   }
 
-  const handleSubmit = () => {
+  // 백엔드로 투표 인증글 등록하는 핵심 함수 (게시판의 '투표인증'으로 전송 + 명예의 전당 점수 상승)
+  const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
       window.alert('제목과 내용을 모두 입력해 주세요.')
       return
@@ -214,15 +242,21 @@ export default function VoteHubView({
     window.alert(dict.certifyDone)
   }
 
-  useEffect(() => {
-    if (settingsOnly) {
-      setView(initialView)
-    }
-  }, [initialView, settingsOnly])
-
-  const completeVote = () => {
+  const completeVote = async () => {
     setView('thanks')
     setShowThanksClip(true)
+
+    try {
+      // 명예의 전당 백엔드에 1표 추가 요청
+      const rankingsSnapshot = await fetch(`${API_URL}/api/rankings`)
+      const rankingData = await rankingsSnapshot.json()
+      if (rankingData.success && rankingData.rankings.length > 0) {
+        const targetSinger = rankingData.rankings.find((r) => r.name === singerName) || rankingData.rankings[0]
+        await fetch(`${API_URL}/api/rankings/${targetSinger.id}/vote`, { method: 'POST' })
+      }
+    } catch (err) {
+      console.error('투표 카운트 증가 실패:', err)
+    }
   }
 
   if (settingsOnly) {
@@ -266,25 +300,25 @@ export default function VoteHubView({
         )}
 
         {view === 'language' && (
-        <div style={{ padding: '20px', borderRadius: '24px', background: 'white', boxShadow: '0 12px 30px rgba(92, 46, 138, 0.08)' }}>
-          <h3 style={{ marginTop: 0 }}>{dict.languageTitle}</h3>
-          <div style={{ display: 'grid', gap: '10px', marginBottom: '16px' }}>
-            {['ko', 'en', 'ja', 'zh-CN'].map((value) => (
-              <button key={value} type="button" onClick={() => setLanguage(value)} style={{ border: language === value ? '1px solid #6d3ba2' : '1px solid #e3d7ef', borderRadius: '12px', padding: '12px', background: language === value ? '#f4e7ff' : 'white', cursor: 'pointer', textAlign: 'left', fontWeight: language === value ? '700' : '500' }}>
-                {value === 'ko' ? '한국어' : value === 'en' ? 'English' : value === 'ja' ? '日本語' : '中文'}
-              </button>
-            ))}
-          </div>
+          <div style={{ padding: '20px', borderRadius: '24px', background: 'white', boxShadow: '0 12px 30px rgba(92, 46, 138, 0.08)' }}>
+            <h3 style={{ marginTop: 0 }}>{dict.languageTitle}</h3>
+            <div style={{ display: 'grid', gap: '10px', marginBottom: '16px' }}>
+              {['ko', 'en', 'ja', 'zh-CN'].map((value) => (
+                <button key={value} type="button" onClick={() => setLanguage(value)} style={{ border: language === value ? '1px solid #6d3ba2' : '1px solid #e3d7ef', borderRadius: '12px', padding: '12px', background: language === value ? '#f4e7ff' : 'white', cursor: 'pointer', textAlign: 'left', fontWeight: language === value ? '700' : '500' }}>
+                  {value === 'ko' ? '한국어' : value === 'en' ? 'English' : value === 'ja' ? '日本語' : '中文'}
+                </button>
+              ))}
+            </div>
 
-          <h3 style={{ marginTop: 0 }}>{dict.fontTitle}</h3>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {['small', 'default', 'large'].map((value) => (
-              <button key={value} type="button" onClick={() => setFontSize(value)} style={{ border: fontSize === value ? '1px solid #6d3ba2' : '1px solid #e3d7ef', borderRadius: '999px', padding: '10px 14px', background: fontSize === value ? '#f4e7ff' : 'white', cursor: 'pointer', fontWeight: '700' }}>
-                {sizeLabels[value]}
-              </button>
-            ))}
+            <h3 style={{ marginTop: 0 }}>{dict.fontTitle}</h3>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {['small', 'default', 'large'].map((value) => (
+                <button key={value} type="button" onClick={() => setFontSize(value)} style={{ border: fontSize === value ? '1px solid #6d3ba2' : '1px solid #e3d7ef', borderRadius: '999px', padding: '10px 14px', background: fontSize === value ? '#f4e7ff' : 'white', cursor: 'pointer', fontWeight: '700' }}>
+                  {sizeLabels[value]}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
         )}
       </div>
     )
@@ -351,23 +385,23 @@ export default function VoteHubView({
         </div>
       )}
 
+      {/* 실시간 백엔드 연동 명예의 전당 */}
       {view === 'hall' && (
         <div style={{ padding: '20px', borderRadius: '24px', background: 'white', boxShadow: '0 12px 30px rgba(92, 46, 138, 0.08)' }}>
           <h3 style={{ margin: '0 0 6px' }}>{dict.hallTitle}</h3>
           <p style={{ margin: '0 0 14px', color: '#6f6472', fontSize: '13px', lineHeight: 1.5 }}>
             {dict.hallSubtitle}
           </p>
-          {rankingItems.length === 0 ? (
-            <div style={{ padding: '16px', border: '1px dashed #d9c6e8', borderRadius: '16px', background: '#fcf8ff', color: '#6b6171', lineHeight: 1.55 }}>
-              랭킹/백엔드 팀 컴포넌트 또는 데이터를 여기에 연결하면 됩니다.
-              <br />
-              예상 데이터: rank, name, score, votes, activity, trend
-            </div>
+
+          {loadingRankings ? (
+            <div style={{ textAlign: 'center', padding: '20px 0', color: '#8c5eb6' }}>명예의 전당 데이터를 불러오는 중...</div>
+          ) : backendRankings.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '20px 0', color: '#8c5eb6' }}>등록된 랭킹 정보가 없습니다.</div>
           ) : (
             <div style={{ display: 'grid', gap: '10px', marginBottom: '12px' }}>
-              {rankingItems.map((artist) => (
+              {backendRankings.map((artist) => (
                 <div
-                  key={artist.name}
+                  key={artist.id || artist.name}
                   style={{
                     display: 'grid',
                     gridTemplateColumns: '42px 1fr auto',
@@ -379,20 +413,20 @@ export default function VoteHubView({
                     background: artist.rank <= 3 ? '#fbf6ff' : '#ffffff',
                   }}
                 >
-                  <div style={{ display: 'flex', width: '38px', height: '38px', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: artist.color || '#6d3ba2', color: 'white', fontWeight: '900' }}>
+                  <div style={{ display: 'flex', width: '38px', height: '38px', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#6d3ba2', color: 'white', fontWeight: '900' }}>
                     {artist.rank}
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <strong style={{ display: 'block', marginBottom: '4px', color: '#2f2432' }}>{artist.name}</strong>
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', color: '#7b6987', fontSize: '11px' }}>
-                      <span>{dict.hallVoteLabel} {artist.votes}</span>
-                      <span>{dict.hallFanLabel} {artist.activity}</span>
+                      <span>{dict.hallVoteLabel} {artist.votes || 0}</span>
+                      <span>인증 {artist.authCount || 0}건</span>
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <strong style={{ display: 'block', color: '#6d3ba2', fontSize: '16px' }}>{Number(artist.score || 0).toLocaleString()}</strong>
-                    <span style={{ color: String(artist.trend).startsWith('+') || artist.trend === 'NEW' ? '#15803d' : '#be123c', fontSize: '11px', fontWeight: '800' }}>
-                      {artist.trend}
+                    <strong style={{ display: 'block', color: '#6d3ba2', fontSize: '16px' }}>{Number(artist.score || 0).toLocaleString()}점</strong>
+                    <span style={{ color: '#15803d', fontSize: '11px', fontWeight: '800' }}>
+                      {artist.trend || 'UP'}
                     </span>
                   </div>
                 </div>

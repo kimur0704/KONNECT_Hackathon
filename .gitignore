@@ -1,3 +1,14 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/serviceAccountKey.json
+
+.DS_Store
 # Logs
 logs
 *.log

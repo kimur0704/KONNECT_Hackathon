@@ -1402,6 +1402,498 @@ function MeetupFinderSection({ dict }) {
   )
 }
 
+/* =================================================================
+   게시판 세로 메뉴 및 개별 연동 컴포넌트
+================================================================= */
+function SingerBoardSection({ singer }) {
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [view, setView] = useState('list')
+  const [selectedPost, setSelectedPost] = useState(null)
+
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [mediaFile, setMediaFile] = useState(null)
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
+  const fetchPosts = async (cat) => {
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/api/posts?singerName=${encodeURIComponent(singer.name)}&category=${encodeURIComponent(cat)}`)
+      const data = await res.json()
+      if (data.success) {
+        setPosts(data.posts)
+      }
+    } catch (err) {
+      console.error('게시글 불러오기 실패:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const openCategoryBoard = (cat) => {
+    setSelectedCategory(cat)
+    setView('list')
+    fetchPosts(cat)
+  }
+
+  const backToCategoryMenu = () => {
+    setSelectedCategory(null)
+    setView('list')
+    setPosts([])
+  }
+
+  const handleCreatePost = async (e) => {
+    e.preventDefault()
+    if (!title.trim() || !content.trim()) {
+      window.alert('제목과 내용을 입력해주세요.')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('title', title)
+    formData.append('content', content)
+    formData.append('category', selectedCategory)
+    formData.append('singerName', singer.name)
+    formData.append('singerId', singer.id)
+    if (mediaFile) {
+      formData.append('media', mediaFile)
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/api/posts`, {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (data.success) {
+        window.alert(selectedCategory === '투표인증' ? '투표 인증 완료! 명예의 전당 점수에 반영되었습니다.' : '게시글이 등록되었습니다!')
+        setTitle('')
+        setContent('')
+        setMediaFile(null)
+        setView('list')
+        fetchPosts(selectedCategory)
+      }
+    } catch (err) {
+      console.error('글 작성 실패:', err)
+    }
+  }
+
+  const handleLike = async (postId) => {
+    try {
+      const res = await fetch(`${API_URL}/api/posts/${postId}/like`, { method: 'PATCH' })
+      const data = await res.json()
+      if (data.success) {
+        setPosts((prev) =>
+          prev.map((p) => (p.id === postId ? { ...p, likes: data.likes } : p))
+        )
+        if (selectedPost && selectedPost.id === postId) {
+          setSelectedPost((prev) => ({ ...prev, likes: data.likes }))
+        }
+      }
+    } catch (err) {
+      console.error('좋아요 실패:', err)
+    }
+  }
+
+  if (!selectedCategory) {
+    return (
+      <div style={{ background: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+        <h4 style={{ margin: '0 0 14px 0', fontSize: '1.1rem', color: '#0f172a', fontWeight: '800' }}>
+          📌 {singer.name} 커뮤니티 게시판
+        </h4>
+        <p style={{ margin: '0 0 16px 0', fontSize: '0.85rem', color: '#64748b' }}>
+          원하시는 게시판을 선택해 팬분들과 소통해 보세요!
+        </p>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <button
+            type="button"
+            onClick={() => openCategoryBoard('응원')}
+            style={{
+              padding: '16px',
+              borderRadius: '12px',
+              border: '2px solid #e2e8f0',
+              background: '#f8fafc',
+              textAlign: 'left',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <div>
+              <strong style={{ fontSize: '1.05rem', color: '#0f172a', display: 'block' }}>📣 응원 게시판</strong>
+              <small style={{ color: '#64748b', fontSize: '0.8rem' }}>가수님을 향한 따뜻한 한마디와 응원 메시지</small>
+            </div>
+            <span style={{ fontSize: '1.2rem', color: '#94a3b8' }}>›</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => openCategoryBoard('자유')}
+            style={{
+              padding: '16px',
+              borderRadius: '12px',
+              border: '2px solid #e2e8f0',
+              background: '#f8fafc',
+              textAlign: 'left',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <div>
+              <strong style={{ fontSize: '1.05rem', color: '#0f172a', display: 'block' }}>💬 자유 게시판</strong>
+              <small style={{ color: '#64748b', fontSize: '0.8rem' }}>일상 소통, 굿즈 나눔 및 후기 이야기</small>
+            </div>
+            <span style={{ fontSize: '1.2rem', color: '#94a3b8' }}>›</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => openCategoryBoard('투표인증')}
+            style={{
+              padding: '16px',
+              borderRadius: '12px',
+              border: '2px solid #ff2a6d',
+              background: '#fff5f7',
+              textAlign: 'left',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <div>
+              <strong style={{ fontSize: '1.05rem', color: '#ff2a6d', display: 'block' }}>✅ 투표 인증 게시판</strong>
+              <small style={{ color: '#e11d48', fontSize: '0.8rem' }}>투표 인증샷 올리고 명예의 전당 점수 쌓기!</small>
+            </div>
+            <span style={{ fontSize: '1.2rem', color: '#ff2a6d' }}>›</span>
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ background: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+      <button
+        type="button"
+        onClick={backToCategoryMenu}
+        style={{ background: 'none', border: 'none', color: '#64748b', fontWeight: 'bold', cursor: 'pointer', marginBottom: '12px', padding: 0 }}
+      >
+        ← 게시판 목록으로
+      </button>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#0f172a', fontWeight: 'bold' }}>
+          {selectedCategory === '투표인증' ? '✅ 투표 인증' : selectedCategory === '응원' ? '📣 응원 게시판' : '💬 자유 게시판'}
+        </h4>
+        {view === 'list' && (
+          <button
+            type="button"
+            onClick={() => setView('write')}
+            style={{ background: '#ff2a6d', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+          >
+            글쓰기
+          </button>
+        )}
+      </div>
+
+      {view === 'list' && (
+        <div>
+          {loading ? (
+            <p style={{ textAlign: 'center', color: '#64748b', padding: '20px 0' }}>게시글을 불러오는 중...</p>
+          ) : posts.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '30px 0', color: '#64748b' }}>
+              <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>등록된 글이 없습니다.</p>
+              <small>첫 번째 소중한 글을 남겨보세요!</small>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {posts.map((post) => (
+                <div
+                  key={post.id}
+                  onClick={() => {
+                    setSelectedPost(post)
+                    setView('detail')
+                  }}
+                  style={{ padding: '14px', border: '1px solid #e2e8f0', borderRadius: '10px', background: '#f8fafc', cursor: 'pointer' }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <span style={{ fontSize: '0.8rem', color: '#ff2a6d', fontWeight: 'bold' }}>[{post.category}]</span>
+                    {post.mediaUrl && <span style={{ fontSize: '0.75rem', color: '#2563eb', fontWeight: 'bold' }}>📷 사진/영상 있음</span>}
+                  </div>
+                  <h5 style={{ margin: '0 0 6px 0', fontSize: '1rem', color: '#0f172a', fontWeight: '800' }}>{post.title}</h5>
+                  <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#475569', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{post.content}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#94a3b8' }}>
+                    <span>익명 팬</span>
+                    <span style={{ color: '#e11d48', fontWeight: 'bold' }}>❤️ {post.likes || 0}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {view === 'write' && (
+        <form onSubmit={handleCreatePost} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <input
+            type="text"
+            placeholder="제목을 입력하세요"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+            required
+          />
+          <textarea
+            placeholder={selectedCategory === '투표인증' ? '투표 완료 인증 소감과 메시지를 남겨주세요.' : '내용을 작성해주세요.'}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', minHeight: '110px', resize: 'none' }}
+            required
+          />
+
+          <div style={{ background: '#f1f5f9', padding: '12px', borderRadius: '8px' }}>
+            <label style={{ fontSize: '0.85rem', color: '#334155', display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
+              📷 사진 / 영상 파일 첨부 (선택)
+            </label>
+            <input
+              type="file"
+              accept="image/*,video/*"
+              onChange={(e) => setMediaFile(e.target.files[0])}
+              style={{ fontSize: '0.85rem' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+            <button
+              type="button"
+              onClick={() => setView('list')}
+              style={{ flex: 1, padding: '12px', background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+            >
+              취소
+            </button>
+            <button
+              type="submit"
+              style={{ flex: 1, padding: '12px', background: '#ff2a6d', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+            >
+              등록하기
+            </button>
+          </div>
+        </form>
+      )}
+
+      {view === 'detail' && selectedPost && (
+        <div>
+          <button
+            type="button"
+            onClick={() => setView('list')}
+            style={{ background: 'none', border: 'none', color: '#64748b', fontWeight: 'bold', cursor: 'pointer', marginBottom: '10px', padding: 0 }}
+          >
+            ← 목록으로 돌아가기
+          </button>
+          <div style={{ padding: '16px', border: '1px solid #e2e8f0', borderRadius: '10px', background: '#ffffff' }}>
+            <span style={{ fontSize: '0.8rem', color: '#ff2a6d', fontWeight: 'bold' }}>[{selectedPost.category}]</span>
+            <h4 style={{ margin: '6px 0 12px 0', fontSize: '1.15rem', color: '#0f172a', fontWeight: '800' }}>{selectedPost.title}</h4>
+            <p style={{ fontSize: '0.95rem', color: '#334155', lineHeight: '1.6', whiteSpace: 'pre-line' }}>{selectedPost.content}</p>
+
+            {selectedPost.mediaUrl && (
+              <div style={{ marginTop: '14px', borderRadius: '10px', overflow: 'hidden' }}>
+                {selectedPost.mediaType === 'video' ? (
+                  <video src={`${API_URL}${selectedPost.mediaUrl}`} controls style={{ width: '100%', maxHeight: '280px' }} />
+                ) : (
+                  <img src={`${API_URL}${selectedPost.mediaUrl}`} alt="첨부 미디어" style={{ width: '100%', maxHeight: '280px', objectFit: 'cover' }} />
+                )}
+              </div>
+            )}
+
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+              <button
+                type="button"
+                onClick={() => handleLike(selectedPost.id)}
+                style={{ background: '#ffe4e6', color: '#e11d48', border: 'none', padding: '10px 20px', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer' }}
+              >
+                ❤️ 좋아요 ({selectedPost.likes || 0})
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+const hallPeriodOptions = [
+  { key: 'week', label: '이번주', voteRate: 0.18, authRate: 0.2 },
+  { key: 'month', label: '이번달', voteRate: 0.48, authRate: 0.55 },
+  { key: 'year', label: '올해', voteRate: 1, authRate: 1 },
+]
+
+const legacySingerNameMap = {
+  윤하늘: '임영웅',
+  김별빛: '송가인',
+  박다정: '장윤정',
+}
+
+const fandomActivityStats = {
+  임영웅: {
+    week: { meetups: 5, volunteer: 2, supportBonus: 820 },
+    month: { meetups: 16, volunteer: 6, supportBonus: 2480 },
+    year: { meetups: 86, volunteer: 24, supportBonus: 12800 },
+  },
+  송가인: {
+    week: { meetups: 4, volunteer: 1, supportBonus: 650 },
+    month: { meetups: 13, volunteer: 4, supportBonus: 2040 },
+    year: { meetups: 72, volunteer: 18, supportBonus: 11200 },
+  },
+  장윤정: {
+    week: { meetups: 3, volunteer: 2, supportBonus: 540 },
+    month: { meetups: 11, volunteer: 5, supportBonus: 1810 },
+    year: { meetups: 64, volunteer: 22, supportBonus: 9800 },
+  },
+}
+
+const getHallScoreRows = (rankings, periodKey) => {
+  const period = hallPeriodOptions.find((item) => item.key === periodKey) || hallPeriodOptions[1]
+  const normalizedRankings = rankings.length > 0 ? rankings : initialFavoriteSingers.map((singer) => ({
+    id: singer.id,
+    name: singer.name,
+    votes: Math.max(40, Math.round(singer.fanDays * 1.7)),
+    authCount: Math.max(8, Math.round(singer.fanDays / 14)),
+  }))
+
+  return normalizedRankings
+    .map((item) => {
+      const fandomName = legacySingerNameMap[item.name] || item.name
+      const activity = fandomActivityStats[fandomName]?.[period.key] || { meetups: 0, volunteer: 0, supportBonus: 0 }
+      const votes = Math.round((item.votes || 0) * period.voteRate)
+      const authCount = Math.round((item.authCount || 0) * period.authRate)
+      const supportScore = votes * 10 + authCount * 50 + activity.supportBonus
+      const activityScore = activity.meetups * 80 + activity.volunteer * 220
+      const totalScore = supportScore + activityScore
+
+      return {
+        ...item,
+        name: fandomName,
+        votes,
+        authCount,
+        meetups: activity.meetups,
+        volunteer: activity.volunteer,
+        supportScore,
+        activityScore,
+        score: totalScore,
+      }
+    })
+    .sort((a, b) => b.score - a.score)
+    .map((item, index) => ({
+      ...item,
+      rank: index + 1,
+    }))
+}
+
+/* =================================================================
+   명예의 전당 실시간 연동 컴포넌트
+================================================================= */
+function HallOfFameSection() {
+  const [rankings, setRankings] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [activePeriod, setActivePeriod] = useState('month')
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
+  const fetchRankings = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/rankings`)
+      const data = await res.json()
+      if (data.success) {
+        setRankings(data.rankings)
+      }
+    } catch (err) {
+      console.error('랭킹 불러오기 실패:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchRankings()
+  }, [])
+
+  const handleVote = async (id, name) => {
+    try {
+      const res = await fetch(`${API_URL}/api/rankings/${id}/vote`, { method: 'POST' })
+      const data = await res.json()
+      if (data.success) {
+        window.alert(data.message)
+        fetchRankings()
+      }
+    } catch (err) {
+      console.error('투표 실패:', err)
+    }
+  }
+
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '20px 0', color: '#64748b' }}>명예의 전당 데이터를 불러오는 중...</div>
+  }
+
+  const hallRows = getHallScoreRows(rankings, activePeriod)
+
+  return (
+    <div className="hall-ranking">
+      <div className="hall-period-tabs" aria-label="명예의 전당 기간 선택">
+        {hallPeriodOptions.map((period) => (
+          <button
+            key={period.key}
+            className={activePeriod === period.key ? 'active' : ''}
+            type="button"
+            onClick={() => setActivePeriod(period.key)}
+          >
+            {period.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="hall-score-note">
+        응원점수 + 팬덤 활동점수로 순위를 매겨요. 봉사활동은 일반 소모임보다 더 높은 점수로 반영돼요.
+      </div>
+
+      <div className="schedule-list hall-ranking-list">
+        {hallRows.map((item) => (
+          <article key={`${item.id}-${item.name}`}>
+            <div className="schedule-date hall-rank-badge">
+              <strong>{item.rank}</strong>
+              <span>위</span>
+            </div>
+
+            <div className="schedule-info hall-rank-info">
+              <span>{item.name} 팬덤</span>
+              <h3>{item.score.toLocaleString()}점</h3>
+              <div className="hall-score-breakdown">
+                <b>응원 {item.supportScore.toLocaleString()}</b>
+                <b>활동 {item.activityScore.toLocaleString()}</b>
+              </div>
+              <small>
+                투표 {item.votes.toLocaleString()}표 · 인증 {item.authCount.toLocaleString()}개 · 소모임 {item.meetups}회 · 봉사 {item.volunteer}회
+              </small>
+            </div>
+
+            <button type="button" onClick={() => handleVote(item.id, item.name)}>
+              응원하기
+            </button>
+          </article>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+
 function App() {
   const [language, setLanguage] = useState(() => {
     const savedLanguage = localStorage.getItem('trot-link-language')
@@ -1750,11 +2242,7 @@ function App() {
               <section className="section">
                 {artistDetailView === 'board' && (
                   <div className="singer-panel">
-                    <FeatureSlot
-                      eyebrow={dict.artistTabs.board[0]}
-                      title={`${selectedSinger.name} ${dict.boardSlotTitle}`}
-                      description={dict.boardSlotText}
-                    />
+                    <SingerBoardSection singer={selectedSinger} />
                   </div>
                 )}
 
@@ -1892,21 +2380,7 @@ function App() {
             </div>
           </div>
 
-          <div className="schedule-list">
-            <article>
-              <div className="schedule-date">
-                <strong>🏆</strong>
-                <span>{dict.ranking}</span>
-              </div>
-              <div className="schedule-info">
-                <span>{dict.trotRanking}</span>
-                <h3>{dict.rankingPlaceholder}</h3>
-              </div>
-              <button type="button" onClick={() => setCurrentPage('vote')}>
-                {dict.view}
-              </button>
-            </article>
-          </div>
+          <HallOfFameSection />
         </section>
       </main>
 
