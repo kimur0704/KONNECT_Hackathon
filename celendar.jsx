@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
-
-// 가수 일정 데이터 샘플
-const scheduleData = [
-  { id: 1, date: "2026-08-10", type: "티켓 예매", title: "서울 콘서트 1차 티켓 오픈", desc: "오후 8시 인터파크 티켓 독점 오픈" },
-  { id: 2, date: "2026-08-14", type: "방송 송출", title: "음악방송 본방사수", desc: "오후 5시 10분 KBS2 뮤직뱅크 출연" },
-  { id: 3, date: "2026-08-18", type: "앨범 발매", title: "신규 미니앨범 음원 공개", desc: "정오 12시 전 음원 사이트 및 뮤직비디오 공개" },
-  { id: 4, date: "2026-08-20", type: "방송 송출", title: "예능 프로그램 게스트 출연", desc: "오후 8시 50분 JTBC 아는 형님" },
-  { id: 5, date: "2026-08-28", type: "콘서트", title: "2026 전국투어 콘서트 - 서울 1일차", desc: "오후 7시 30분 올림픽 체조경기장" },
-  { id: 6, date: "2026-08-29", type: "콘서트", title: "2026 전국투어 콘서트 - 서울 2일차", desc: "오후 6시 올림픽 체조경기장" }
-];
+import React, { useState, useEffect } from 'react';
 
 const categories = ["전체", "티켓 예매", "방송 송출", "앨범 발매", "콘서트"];
 
 export default function SingerCalendar() {
+  const [scheduleData, setScheduleData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date(2026, 7, 1)); // 2026년 8월 기준
   const [selectedDateStr, setSelectedDateStr] = useState("2026-08-10");
   const [currentFilter, setCurrentFilter] = useState("전체");
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+  // 백엔드 API에서 일정 데이터 가져오기
+  useEffect(() => {
+    fetch(`${API_URL}/api/schedules`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setScheduleData(data.schedules);
+        }
+      })
+      .catch((err) => console.error("일정 불러오기 에러:", err))
+      .finally(() => setLoading(false));
+  }, [API_URL]);
 
   // 월 이동
   const changeMonth = (delta) => {
@@ -62,6 +69,14 @@ export default function SingerCalendar() {
   });
 
   const [selYear, selMonth, selDay] = selectedDateStr.split('-').map(Number);
+
+  if (loading) {
+    return (
+      <div className="container" style={{ textAlign: 'center', padding: '40px 0' }}>
+        <p style={{ color: '#64748b', fontSize: '1.1rem' }}>일정 데이터를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container">
