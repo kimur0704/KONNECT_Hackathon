@@ -5,29 +5,53 @@ import VoteHubView from './pages/VoteHubView'
 const initialFavoriteSingers = [
   {
     id: 1,
-    name: '윤하늘',
-    initial: '윤',
+    name: '임영웅',
+    initial: '임',
+    photo: '/artists/lim-youngwoong.png',
     fanDays: 327,
     color: 'purple',
     schedule: '오늘 오후 8시 음악방송',
   },
   {
     id: 2,
-    name: '김별빛',
-    initial: '김',
+    name: '송가인',
+    initial: '송',
+    photo: '/artists/song-gain.png',
     fanDays: 152,
     color: 'pink',
     schedule: '내일 오후 7시 라이브 방송',
   },
   {
     id: 3,
-    name: '박다정',
-    initial: '박',
+    name: '장윤정',
+    initial: '장',
+    photo: '/artists/jang-yoonjeong.png',
     fanDays: 48,
     color: 'blue',
     schedule: '8월 10일 콘서트 예매',
   },
 ]
+
+const defaultSingerNameMap = {
+  '윤하늘': { name: '임영웅', initial: '임', photo: '/artists/lim-youngwoong.png' },
+  '임영웅': { name: '임영웅', initial: '임', photo: '/artists/lim-youngwoong.png' },
+  '김별빛': { name: '송가인', initial: '송', photo: '/artists/song-gain.png' },
+  '송가인': { name: '송가인', initial: '송', photo: '/artists/song-gain.png' },
+  '박다정': { name: '장윤정', initial: '장', photo: '/artists/jang-yoonjeong.png' },
+  '장윤정': { name: '장윤정', initial: '장', photo: '/artists/jang-yoonjeong.png' },
+}
+
+const migrateFavoriteSingers = (singers) =>
+  singers.map((singer) => {
+    const nextSinger = defaultSingerNameMap[singer.name]
+
+    if (!nextSinger) return singer
+
+    return {
+      ...singer,
+      ...nextSinger,
+    }
+  })
 
 const translations = {
   ko: {
@@ -71,6 +95,80 @@ const translations = {
     settingsTitle: '마이페이지',
     fontTitle: '글자 크기',
     back: '뒤로가기',
+    assistantTitle: 'AI 도움',
+    assistantIntro: '서비스 안내',
+    assistantHeadline: '팬 활동을 빠르게 찾도록 돕는 안내 영역',
+    assistantVoteTitle: '투표와 인증 안내',
+    assistantVoteText: '투표 링크 위치, 인증글 작성 흐름, 명예의 전당 반영 기준을 안내하는 영역입니다.',
+    assistantScheduleTitle: '스케줄과 모임 찾기',
+    assistantScheduleText: '좋아하는 가수의 방송, 공연, 팬 모임 일정을 한눈에 확인하도록 돕습니다.',
+    assistantCommunityTitle: '커뮤니티 이용 도움',
+    assistantCommunityText: '게시판 작성, 알림 확인, 팬 활동 기록 확인 방법을 정리해 두는 자리입니다.',
+    busTitle: '공연 버스 대절',
+    busSubtitle: '전국투어 공연과 회차를 고른 뒤 출발지, 도착지, 경유지를 확인하고 신청해요.',
+    busStepConcert: '공연 선택',
+    busStepDate: '공연 일자 선택',
+    busStepRoute: '출발 노선 선택',
+    busSeats: '석 신청',
+    busInfoTitle: '신청 정보 확인',
+    busDate: '공연 일자',
+    busStart: '출발지',
+    busDestination: '도착지',
+    busDeparture: '출발 시간',
+    busPrice: '회비',
+    busOrganizer: '주최',
+    busStops: '출발지 · 경유지 · 도착지',
+    busReserve: '버스 대절 신청하기',
+    busCancel: '신청 취소하기',
+    busReservedAlert: '버스 대절 신청이 임시 저장되었습니다.',
+    busCanceledAlert: '출발 신청이 취소되었습니다.',
+    artistTabs: {
+      board: ['게시판', '팬 소식과 공지를 확인해요'],
+      schedule: ['스케줄', '다가오는 일정과 달력을 보여줘요'],
+      vote: ['투표', '오늘의 투표와 발자취를 확인해요'],
+      bus: ['버스대절', '공연장 이동 노선과 좌석을 확인해요'],
+      meetup: ['모임찾기', '내 주변 팬 활동 모임을 찾아요'],
+    },
+    artistSpace: '팬덤 공간',
+    nearbyNotice: '내 주변 모임 알림',
+    fanMeetupToday: '팬 모임이 오늘 7시에 열려요.',
+    noticeSmall: '버스대절, 인증글, 실시간 공지까지 한 번에 확인해 보세요.',
+    backToMenu: '메뉴로',
+    boardSlotTitle: '게시판 연결 영역',
+    boardSlotText: '게시판 팀 컴포넌트를 이 자리에 연결하면 됩니다. singerId 또는 singerName 기준으로 게시글 목록, 작성, 상세 화면을 붙이는 슬롯입니다.',
+    scheduleUpcoming: '다가오는 일정',
+    voteSlotTitle: '투표 기능 연결 영역',
+    voteSlotText: '투표 팀 컴포넌트를 이 자리에 연결하면 됩니다. 투표 완료 콜백에서 감사 인사 영상이나 인증 화면으로 이어지게 만들 수 있습니다.',
+    votePreview: '현재 임시 투표 화면 보기',
+    myArtistsEyebrow: 'MY ARTISTS',
+    togetherDays: '함께한 지',
+    days: '일',
+    hallEyebrow: 'HALL OF FAME',
+    ranking: '랭킹',
+    trotRanking: '트롯 가수 랭킹',
+    rankingPlaceholder: '랭킹 팀의 인기/투표/팬덤 활동량 집계가 들어갈 영역',
+    view: '보기',
+    alertLabel: '알림',
+    today: '오늘',
+    certLabel: '인증',
+    justNow: '방금',
+    linkLabel: '링크',
+    updated: '업데이트',
+    meetupFinder: '모임찾기',
+    fanActivityMeetups: '가수 팬 활동 모임',
+    nearbyMeetups: '내 주변 모임',
+    allMeetups: '전체 모임 보기',
+    currentLocation: '현재 위치',
+    distanceFromMe: '내 위치에서',
+    details: '내용 보기',
+    apply: '신청하기',
+    applied: '신청 완료',
+    regionSelect: '지역 선택:',
+    allRegions: '전체 보기',
+    dateTime: '일시',
+    location: '위치',
+    meetupIntro: '모임 소개',
+    backToList: '목록으로',
   },
   en: {
     welcome: 'Hello 👋',
@@ -113,6 +211,80 @@ const translations = {
     settingsTitle: 'My page',
     fontTitle: 'Font size',
     back: 'Back',
+    assistantTitle: 'AI help',
+    assistantIntro: 'Service guide',
+    assistantHeadline: 'A guide area for finding fan activities quickly',
+    assistantVoteTitle: 'Voting and certificates',
+    assistantVoteText: 'Guides vote links, certificate flow, and hall-of-fame criteria.',
+    assistantScheduleTitle: 'Schedules and meetups',
+    assistantScheduleText: 'Helps you find broadcasts, concerts, and fan meetups at a glance.',
+    assistantCommunityTitle: 'Community help',
+    assistantCommunityText: 'A place for board posting, alerts, and fan activity record guidance.',
+    busTitle: 'concert bus charter',
+    busSubtitle: 'Choose a tour stop and date, then check departure, destination, stops, and apply.',
+    busStepConcert: 'Choose concert',
+    busStepDate: 'Choose date',
+    busStepRoute: 'Choose route',
+    busSeats: 'seats applied',
+    busInfoTitle: 'Application details',
+    busDate: 'Concert date',
+    busStart: 'Departure',
+    busDestination: 'Destination',
+    busDeparture: 'Departure time',
+    busPrice: 'Fee',
+    busOrganizer: 'Organizer',
+    busStops: 'Departure · Stops · Destination',
+    busReserve: 'Apply for bus charter',
+    busCancel: 'Cancel application',
+    busReservedAlert: 'Your bus charter application was saved.',
+    busCanceledAlert: 'Your departure application was canceled.',
+    artistTabs: {
+      board: ['Board', 'Check fan news and notices'],
+      schedule: ['Schedule', 'See upcoming dates and calendar'],
+      vote: ['Vote', 'Check today’s votes and activity'],
+      bus: ['Bus charter', 'Check routes and seats to the venue'],
+      meetup: ['Meetups', 'Find fan activities near you'],
+    },
+    artistSpace: 'fandom space',
+    nearbyNotice: 'Nearby meetup alert',
+    fanMeetupToday: 'fan meetup starts at 7 PM today.',
+    noticeSmall: 'Check bus charters, certificates, and live notices in one place.',
+    backToMenu: 'menu',
+    boardSlotTitle: 'board connection area',
+    boardSlotText: 'Connect the board team component here. This slot can show post lists, writing, and details by singerId or singerName.',
+    scheduleUpcoming: 'Upcoming schedule',
+    voteSlotTitle: 'vote feature connection area',
+    voteSlotText: 'Connect the vote team component here. Vote completion can lead to a thank-you video or certificate screen.',
+    votePreview: 'Open temporary vote screen',
+    myArtistsEyebrow: 'MY ARTISTS',
+    togetherDays: 'Together for',
+    days: 'days',
+    hallEyebrow: 'HALL OF FAME',
+    ranking: 'Ranking',
+    trotRanking: 'Trot artist ranking',
+    rankingPlaceholder: 'Area for popularity, votes, and fandom activity ranking data',
+    view: 'View',
+    alertLabel: 'Alert',
+    today: 'Today',
+    certLabel: 'Certificate',
+    justNow: 'Just now',
+    linkLabel: 'Link',
+    updated: 'Updated',
+    meetupFinder: 'Meetups',
+    fanActivityMeetups: 'Artist fan activity meetups',
+    nearbyMeetups: 'Nearby meetups',
+    allMeetups: 'All meetups',
+    currentLocation: 'Current location',
+    distanceFromMe: 'From my location',
+    details: 'Details',
+    apply: 'Apply',
+    applied: 'Applied',
+    regionSelect: 'Region:',
+    allRegions: 'All',
+    dateTime: 'Date',
+    location: 'Location',
+    meetupIntro: 'Meetup intro',
+    backToList: 'Back to list',
   },
   ja: {
     welcome: 'こんにちは 👋',
@@ -155,6 +327,80 @@ const translations = {
     settingsTitle: 'マイページ',
     fontTitle: '文字サイズ',
     back: '戻る',
+    assistantTitle: 'AIヘルプ',
+    assistantIntro: 'サービス案内',
+    assistantHeadline: 'ファン活動を素早く見つけるための案内エリア',
+    assistantVoteTitle: '投票と認証案内',
+    assistantVoteText: '投票リンク、認証投稿、名誉の殿堂の反映基準を案内します。',
+    assistantScheduleTitle: 'スケジュールと交流会',
+    assistantScheduleText: '放送、公演、ファン交流会の日程を一目で確認できます。',
+    assistantCommunityTitle: 'コミュニティ利用ヘルプ',
+    assistantCommunityText: '掲示板投稿、通知確認、ファン活動記録の確認方法をまとめる場所です。',
+    busTitle: '公演バス手配',
+    busSubtitle: '全国ツアー公演と日程を選び、出発地・到着地・経由地を確認して申請します。',
+    busStepConcert: '公演選択',
+    busStepDate: '日程選択',
+    busStepRoute: '出発路線選択',
+    busSeats: '席申請',
+    busInfoTitle: '申請情報確認',
+    busDate: '公演日程',
+    busStart: '出発地',
+    busDestination: '到着地',
+    busDeparture: '出発時間',
+    busPrice: '会費',
+    busOrganizer: '主催',
+    busStops: '出発地 · 経由地 · 到着地',
+    busReserve: 'バス手配を申請',
+    busCancel: '申請をキャンセル',
+    busReservedAlert: 'バス手配申請が保存されました。',
+    busCanceledAlert: '出発申請がキャンセルされました。',
+    artistTabs: {
+      board: ['掲示板', 'ファンニュースとお知らせを確認'],
+      schedule: ['スケジュール', '今後の日程とカレンダーを見る'],
+      vote: ['投票', '今日の投票と活動を確認'],
+      bus: ['バス手配', '会場行きの路線と座席を確認'],
+      meetup: ['交流会探し', '近くのファン活動を探す'],
+    },
+    artistSpace: 'ファンダム空間',
+    nearbyNotice: '近くの交流会通知',
+    fanMeetupToday: 'ファン交流会が今日7時に開かれます。',
+    noticeSmall: 'バス手配、認証投稿、リアルタイム告知をまとめて確認できます。',
+    backToMenu: 'メニューへ',
+    boardSlotTitle: '掲示板接続エリア',
+    boardSlotText: 'ここに掲示板チームのコンポーネントを接続します。singerId または singerName 基準で投稿一覧、作成、詳細画面を配置できます。',
+    scheduleUpcoming: '今後の日程',
+    voteSlotTitle: '投票機能接続エリア',
+    voteSlotText: 'ここに投票チームのコンポーネントを接続します。投票完了後に感謝動画や認証画面へつなげられます。',
+    votePreview: '仮投票画面を見る',
+    myArtistsEyebrow: 'MY ARTISTS',
+    togetherDays: '一緒に応援して',
+    days: '日',
+    hallEyebrow: 'HALL OF FAME',
+    ranking: 'ランキング',
+    trotRanking: 'トロット歌手ランキング',
+    rankingPlaceholder: '人気・投票・ファンダム活動量の集計エリア',
+    view: '見る',
+    alertLabel: '通知',
+    today: '今日',
+    certLabel: '認証',
+    justNow: 'たった今',
+    linkLabel: 'リンク',
+    updated: '更新',
+    meetupFinder: '交流会探し',
+    fanActivityMeetups: 'アーティストファン活動',
+    nearbyMeetups: '近くの交流会',
+    allMeetups: 'すべて見る',
+    currentLocation: '現在地',
+    distanceFromMe: '現在地から',
+    details: '詳細を見る',
+    apply: '申請する',
+    applied: '申請済み',
+    regionSelect: '地域選択:',
+    allRegions: 'すべて見る',
+    dateTime: '日時',
+    location: '場所',
+    meetupIntro: '交流会紹介',
+    backToList: '一覧へ',
   },
   'zh-CN': {
     welcome: '你好 👋',
@@ -197,6 +443,80 @@ const translations = {
     settingsTitle: '我的页面',
     fontTitle: '字体大小',
     back: '返回',
+    assistantTitle: 'AI 帮助',
+    assistantIntro: '服务指南',
+    assistantHeadline: '帮助快速找到粉丝活动的指南区域',
+    assistantVoteTitle: '投票与认证指南',
+    assistantVoteText: '说明投票链接、认证流程和名人堂统计标准。',
+    assistantScheduleTitle: '日程和活动查找',
+    assistantScheduleText: '帮助一眼查看播出、公演和粉丝活动日程。',
+    assistantCommunityTitle: '社区使用帮助',
+    assistantCommunityText: '整理发帖、通知确认和粉丝活动记录的使用方式。',
+    busTitle: '演唱会包车',
+    busSubtitle: '选择巡演场次和日期后，确认出发地、目的地、经停地并申请。',
+    busStepConcert: '选择公演',
+    busStepDate: '选择日期',
+    busStepRoute: '选择出发路线',
+    busSeats: '席已申请',
+    busInfoTitle: '申请信息确认',
+    busDate: '公演日期',
+    busStart: '出发地',
+    busDestination: '目的地',
+    busDeparture: '出发时间',
+    busPrice: '费用',
+    busOrganizer: '主办',
+    busStops: '出发地 · 经停地 · 目的地',
+    busReserve: '申请包车',
+    busCancel: '取消申请',
+    busReservedAlert: '包车申请已临时保存。',
+    busCanceledAlert: '出发申请已取消。',
+    artistTabs: {
+      board: ['公告板', '查看粉丝消息和公告'],
+      schedule: ['日程', '查看即将到来的日程和日历'],
+      vote: ['投票', '查看今日投票和活动'],
+      bus: ['包车', '查看前往场馆的路线和座位'],
+      meetup: ['找活动', '查找附近粉丝活动'],
+    },
+    artistSpace: '粉丝空间',
+    nearbyNotice: '附近活动通知',
+    fanMeetupToday: '粉丝聚会今天7点开始。',
+    noticeSmall: '包车、认证帖和实时公告都可以在这里确认。',
+    backToMenu: '菜单',
+    boardSlotTitle: '公告板连接区域',
+    boardSlotText: '在这里连接公告板组件。可按 singerId 或 singerName 显示帖子列表、写作和详情。',
+    scheduleUpcoming: '即将到来的日程',
+    voteSlotTitle: '投票功能连接区域',
+    voteSlotText: '在这里连接投票组件。投票完成后可以跳转到感谢视频或认证页面。',
+    votePreview: '查看临时投票页面',
+    myArtistsEyebrow: 'MY ARTISTS',
+    togetherDays: '一起应援',
+    days: '天',
+    hallEyebrow: 'HALL OF FAME',
+    ranking: '排行',
+    trotRanking: 'Trot 歌手排行',
+    rankingPlaceholder: '人气、投票和粉丝活动量统计区域',
+    view: '查看',
+    alertLabel: '通知',
+    today: '今天',
+    certLabel: '认证',
+    justNow: '刚刚',
+    linkLabel: '链接',
+    updated: '已更新',
+    meetupFinder: '找活动',
+    fanActivityMeetups: '歌手粉丝活动',
+    nearbyMeetups: '附近活动',
+    allMeetups: '查看全部',
+    currentLocation: '当前位置',
+    distanceFromMe: '距当前位置',
+    details: '查看内容',
+    apply: '申请',
+    applied: '已申请',
+    regionSelect: '选择地区:',
+    allRegions: '查看全部',
+    dateTime: '日期',
+    location: '位置',
+    meetupIntro: '活动介绍',
+    backToList: '返回列表',
   },
 }
 
@@ -690,41 +1010,55 @@ function HeaderActions({ languageLabel, aiLabel, onLanguage, onAiHelp }) {
   )
 }
 
-function AiHelpPage({ onBack }) {
+function SingerAvatar({ singer }) {
+  const [imageError, setImageError] = useState(false)
+
+  if (singer.photo && !imageError) {
+    return (
+      <div className="singer-avatar photo">
+        <img src={singer.photo} alt={`${singer.name} profile`} onError={() => setImageError(true)} />
+      </div>
+    )
+  }
+
+  return <div className="singer-avatar">{singer.initial}</div>
+}
+
+function AiHelpPage({ onBack, dict }) {
   return (
     <div className="app">
       <header className="top-header">
         <div>
           <p className="small-text">ASSISTANT</p>
-          <h1>AI 도움</h1>
+          <h1>{dict.assistantTitle}</h1>
         </div>
         <button className="language-button" type="button" onClick={onBack}>
-          뒤로가기
+          {dict.back}
         </button>
       </header>
 
       <main className="page-content">
         <section className="welcome-section">
-          <p>서비스 안내</p>
-          <h2>팬 활동을 빠르게 찾도록 돕는 안내 영역</h2>
+          <p>{dict.assistantIntro}</p>
+          <h2>{dict.assistantHeadline}</h2>
         </section>
 
         <section className="section">
           <div className="ai-help-panel">
             <article>
               <span>01</span>
-              <h3>투표와 인증 안내</h3>
-              <p>투표 링크 위치, 인증글 작성 흐름, 명예의 전당 반영 기준을 안내하는 영역입니다.</p>
+              <h3>{dict.assistantVoteTitle}</h3>
+              <p>{dict.assistantVoteText}</p>
             </article>
             <article>
               <span>02</span>
-              <h3>스케줄과 모임 찾기</h3>
-              <p>좋아하는 가수의 방송, 공연, 팬 모임 일정을 한눈에 확인하도록 돕습니다.</p>
+              <h3>{dict.assistantScheduleTitle}</h3>
+              <p>{dict.assistantScheduleText}</p>
             </article>
             <article>
               <span>03</span>
-              <h3>커뮤니티 이용 도움</h3>
-              <p>게시판 작성, 알림 확인, 팬 활동 기록 확인 방법을 정리해 두는 자리입니다.</p>
+              <h3>{dict.assistantCommunityTitle}</h3>
+              <p>{dict.assistantCommunityText}</p>
             </article>
           </div>
         </section>
@@ -733,7 +1067,7 @@ function AiHelpPage({ onBack }) {
   )
 }
 
-function BusCharterSection({ singerName }) {
+function BusCharterSection({ singerName, dict }) {
   const [concerts, setConcerts] = useState(busConcerts)
   const [selectedConcertId, setSelectedConcertId] = useState(busConcerts[0].id)
   const selectedConcert = concerts.find((concert) => concert.id === selectedConcertId) || concerts[0]
@@ -770,8 +1104,8 @@ function BusCharterSection({ singerName }) {
             const reserved = !route.reserved
             window.alert(
               reserved
-                ? `${concert.city} ${date.label}\n${route.start} 출발 버스 대절 신청이 임시 저장되었습니다.`
-                : `${concert.city} ${date.label}\n${route.start} 출발 신청이 취소되었습니다.`,
+                ? `${concert.city} ${date.label}\n${route.start} ${dict.busReservedAlert}`
+                : `${concert.city} ${date.label}\n${route.start} ${dict.busCanceledAlert}`,
             )
             return { ...route, reserved }
           }),
@@ -784,14 +1118,14 @@ function BusCharterSection({ singerName }) {
     <div className="bus-charter-panel">
       <div className="bus-hero">
         <p>BUS CHARTER</p>
-        <h3>{singerName} 공연 버스 대절</h3>
-        <span>전국투어 공연과 회차를 고른 뒤 출발지, 도착지, 경유지를 확인하고 신청해요.</span>
+        <h3>{singerName} {dict.busTitle}</h3>
+        <span>{dict.busSubtitle}</span>
       </div>
 
       <div className="bus-step-block">
         <div className="bus-step-title">
           <span>STEP 1</span>
-          <h4>공연 선택</h4>
+          <h4>{dict.busStepConcert}</h4>
         </div>
         <div className="bus-concert-grid">
           {concerts.map((concert) => (
@@ -811,7 +1145,7 @@ function BusCharterSection({ singerName }) {
       <div className="bus-step-block">
         <div className="bus-step-title">
           <span>STEP 2</span>
-          <h4>공연 일자 선택</h4>
+          <h4>{dict.busStepDate}</h4>
         </div>
         <div className="bus-date-tabs">
           {selectedConcert.dates.map((date) => (
@@ -831,7 +1165,7 @@ function BusCharterSection({ singerName }) {
       <div className="bus-step-block">
         <div className="bus-step-title">
           <span>STEP 3</span>
-          <h4>출발 노선 선택</h4>
+          <h4>{dict.busStepRoute}</h4>
         </div>
         <div className="bus-route-list">
         {selectedDate.routes.map((route) => {
@@ -852,7 +1186,7 @@ function BusCharterSection({ singerName }) {
               <div className="bus-seat-meter" aria-label={`좌석 ${route.seats}석 신청`}>
                 <span style={{ width: `${percent}%` }} />
               </div>
-              <small>{route.seats}/{route.capacity}석 신청</small>
+              <small>{route.seats}/{route.capacity} {dict.busSeats}</small>
             </button>
           )
         })}
@@ -861,39 +1195,39 @@ function BusCharterSection({ singerName }) {
 
       <div className="bus-detail-card">
         <div className="panel-title-row">
-          <p>신청 정보 확인</p>
+          <p>{dict.busInfoTitle}</p>
           <h3>{selectedConcert.title}</h3>
         </div>
 
         <div className="bus-detail-grid">
           <div>
-            <p>공연 일자</p>
+            <p>{dict.busDate}</p>
             <strong>{selectedDate.label} {selectedDate.time}</strong>
           </div>
           <div>
-            <p>출발지</p>
+            <p>{dict.busStart}</p>
             <strong>{selectedRoute.start}</strong>
           </div>
           <div>
-            <p>도착지</p>
+            <p>{dict.busDestination}</p>
             <strong>{selectedRoute.destination}</strong>
           </div>
           <div>
-            <p>출발 시간</p>
+            <p>{dict.busDeparture}</p>
             <strong>{selectedRoute.departure}</strong>
           </div>
           <div>
-            <p>회비</p>
+            <p>{dict.busPrice}</p>
             <strong>{selectedRoute.price}</strong>
           </div>
           <div>
-            <p>주최</p>
+            <p>{dict.busOrganizer}</p>
             <strong>{selectedRoute.organizer}</strong>
           </div>
         </div>
 
         <div className="bus-stop-list">
-          <p>출발지 · 경유지 · 도착지</p>
+          <p>{dict.busStops}</p>
           {selectedRoute.stops.map((stop, index) => (
             <div key={stop}>
               <span>{index + 1}</span>
@@ -907,14 +1241,14 @@ function BusCharterSection({ singerName }) {
           className={selectedRoute.reserved ? 'bus-reserve-button reserved' : 'bus-reserve-button'}
           onClick={() => toggleReserve(selectedRoute.id)}
         >
-          {selectedRoute.reserved ? '신청 취소하기' : '버스 대절 신청하기'}
+          {selectedRoute.reserved ? dict.busCancel : dict.busReserve}
         </button>
       </div>
     </div>
   )
 }
 
-function MeetupFinderSection() {
+function MeetupFinderSection({ dict }) {
   const [events, setEvents] = useState(initialEvents)
   const [currentView, setCurrentView] = useState('list')
   const [selectedEventId, setSelectedEventId] = useState(null)
@@ -965,38 +1299,38 @@ function MeetupFinderSection() {
         <>
           <div className="meetup-finder-header">
             <div>
-              <p>모임찾기</p>
-              <h4>가수 팬 활동 모임</h4>
+              <p>{dict.meetupFinder}</p>
+              <h4>{dict.fanActivityMeetups}</h4>
             </div>
           </div>
 
           <div className="meetup-tab-nav">
             <button type="button" className={activeTab === 'nearby' ? 'active' : ''} onClick={() => setActiveTab('nearby')}>
-              내 주변 모임
+              {dict.nearbyMeetups}
             </button>
             <button type="button" className={activeTab === 'upcoming' ? 'active' : ''} onClick={() => setActiveTab('upcoming')}>
-              전체 모임 보기
+              {dict.allMeetups}
             </button>
           </div>
 
           {activeTab === 'nearby' ? (
             <div className="meetup-section">
               <div className="meetup-info-box">
-                <span>현재 위치: <strong>경기도 고양시</strong></span>
+                <span>{dict.currentLocation}: <strong>경기도 고양시</strong></span>
               </div>
               <div className="meetup-event-list">
                 {nearbyEvents.map((item) => (
                   <div key={item.id} className="meetup-event-card">
                     <div className="meetup-badge-row">
                       <span className="meetup-tag">{item.type}</span>
-                      <span className="meetup-distance">내 위치에서 {item.distance}</span>
+                      <span className="meetup-distance">{dict.distanceFromMe} {item.distance}</span>
                     </div>
                     <h5>{item.title}</h5>
                     <p>{item.location} · {item.date}</p>
                     <div className="meetup-actions">
-                      <button type="button" onClick={() => goToDetail(item.id)}>내용 보기</button>
+                      <button type="button" onClick={() => goToDetail(item.id)}>{dict.details}</button>
                       <button type="button" className={item.booked ? 'booked' : ''} onClick={() => toggleBook(item.id)}>
-                        {item.booked ? '신청 완료' : '신청하기'}
+                        {item.booked ? dict.applied : dict.apply}
                       </button>
                     </div>
                   </div>
@@ -1006,9 +1340,9 @@ function MeetupFinderSection() {
           ) : (
             <div className="meetup-section">
               <div className="meetup-info-box">
-                <span>지역 선택:</span>
+                <span>{dict.regionSelect}</span>
                 <select value={selectedRegion} onChange={(event) => setSelectedRegion(event.target.value)}>
-                  <option value="전체">전체 보기</option>
+                  <option value="전체">{dict.allRegions}</option>
                   <option value="경기도">경기도</option>
                   <option value="강원도">강원도</option>
                   <option value="충청남도">충청남도</option>
@@ -1027,9 +1361,9 @@ function MeetupFinderSection() {
                     <h5>{item.title}</h5>
                     <p>{item.location} · {item.date}</p>
                     <div className="meetup-actions">
-                      <button type="button" onClick={() => goToDetail(item.id)}>내용 보기</button>
+                      <button type="button" onClick={() => goToDetail(item.id)}>{dict.details}</button>
                       <button type="button" className={item.booked ? 'booked' : ''} onClick={() => toggleBook(item.id)}>
-                        {item.booked ? '신청 완료' : '신청하기'}
+                        {item.booked ? dict.applied : dict.apply}
                       </button>
                     </div>
                   </div>
@@ -1044,22 +1378,22 @@ function MeetupFinderSection() {
           <h4>{selectedEvent.title}</h4>
           <div className="meetup-detail-info">
             <div>
-              <p>일시</p>
+              <p>{dict.dateTime}</p>
               <strong>{selectedEvent.date}</strong>
             </div>
             <div>
-              <p>위치</p>
+              <p>{dict.location}</p>
               <strong>{selectedEvent.region} {selectedEvent.location}</strong>
             </div>
             <div>
-              <p>모임 소개</p>
+              <p>{dict.meetupIntro}</p>
               <span>{selectedEvent.desc}</span>
             </div>
           </div>
           <div className="meetup-actions full">
-            <button type="button" onClick={goBack}>목록으로</button>
+            <button type="button" onClick={goBack}>{dict.backToList}</button>
             <button type="button" className={selectedEvent.booked ? 'booked' : ''} onClick={() => toggleBook(selectedEvent.id)}>
-              {selectedEvent.booked ? '신청 완료' : '신청하기'}
+              {selectedEvent.booked ? dict.applied : dict.apply}
             </button>
           </div>
         </div>
@@ -1395,12 +1729,81 @@ function SingerBoardSection({ singer }) {
   )
 }
 
+const hallPeriodOptions = [
+  { key: 'week', label: '이번주', voteRate: 0.18, authRate: 0.2 },
+  { key: 'month', label: '이번달', voteRate: 0.48, authRate: 0.55 },
+  { key: 'year', label: '올해', voteRate: 1, authRate: 1 },
+]
+
+const legacySingerNameMap = {
+  윤하늘: '임영웅',
+  김별빛: '송가인',
+  박다정: '장윤정',
+}
+
+const fandomActivityStats = {
+  임영웅: {
+    week: { meetups: 5, volunteer: 2, supportBonus: 820 },
+    month: { meetups: 16, volunteer: 6, supportBonus: 2480 },
+    year: { meetups: 86, volunteer: 24, supportBonus: 12800 },
+  },
+  송가인: {
+    week: { meetups: 4, volunteer: 1, supportBonus: 650 },
+    month: { meetups: 13, volunteer: 4, supportBonus: 2040 },
+    year: { meetups: 72, volunteer: 18, supportBonus: 11200 },
+  },
+  장윤정: {
+    week: { meetups: 3, volunteer: 2, supportBonus: 540 },
+    month: { meetups: 11, volunteer: 5, supportBonus: 1810 },
+    year: { meetups: 64, volunteer: 22, supportBonus: 9800 },
+  },
+}
+
+const getHallScoreRows = (rankings, periodKey) => {
+  const period = hallPeriodOptions.find((item) => item.key === periodKey) || hallPeriodOptions[1]
+  const normalizedRankings = rankings.length > 0 ? rankings : initialFavoriteSingers.map((singer) => ({
+    id: singer.id,
+    name: singer.name,
+    votes: Math.max(40, Math.round(singer.fanDays * 1.7)),
+    authCount: Math.max(8, Math.round(singer.fanDays / 14)),
+  }))
+
+  return normalizedRankings
+    .map((item) => {
+      const fandomName = legacySingerNameMap[item.name] || item.name
+      const activity = fandomActivityStats[fandomName]?.[period.key] || { meetups: 0, volunteer: 0, supportBonus: 0 }
+      const votes = Math.round((item.votes || 0) * period.voteRate)
+      const authCount = Math.round((item.authCount || 0) * period.authRate)
+      const supportScore = votes * 10 + authCount * 50 + activity.supportBonus
+      const activityScore = activity.meetups * 80 + activity.volunteer * 220
+      const totalScore = supportScore + activityScore
+
+      return {
+        ...item,
+        name: fandomName,
+        votes,
+        authCount,
+        meetups: activity.meetups,
+        volunteer: activity.volunteer,
+        supportScore,
+        activityScore,
+        score: totalScore,
+      }
+    })
+    .sort((a, b) => b.score - a.score)
+    .map((item, index) => ({
+      ...item,
+      rank: index + 1,
+    }))
+}
+
 /* =================================================================
    명예의 전당 실시간 연동 컴포넌트
 ================================================================= */
 function HallOfFameSection() {
   const [rankings, setRankings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [activePeriod, setActivePeriod] = useState('month')
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
@@ -1439,34 +1842,57 @@ function HallOfFameSection() {
     return <div style={{ textAlign: 'center', padding: '20px 0', color: '#64748b' }}>명예의 전당 데이터를 불러오는 중...</div>
   }
 
+  const hallRows = getHallScoreRows(rankings, activePeriod)
+
   return (
-    <div className="schedule-list">
-      {rankings.map((item) => (
-        <article key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px', border: '1px solid #e2e8f0', borderRadius: '12px', marginBottom: '10px', background: '#ffffff' }}>
-          <div className="schedule-date">
-            <strong style={{ fontSize: '1.1rem', color: '#ff2a6d' }}>🏆 {item.rank}위</strong>
-          </div>
-          <div className="schedule-info" style={{ flex: 1, marginLeft: '14px' }}>
-            <h3 style={{ margin: '0 0 2px 0', fontSize: '1.05rem', color: '#0f172a', fontWeight: '800' }}>{item.name}</h3>
-            <div style={{ fontSize: '0.85rem', color: '#ff2a6d', fontWeight: 'bold' }}>
-              총점 {item.score?.toLocaleString()}점
-            </div>
-            <small style={{ color: '#64748b', fontSize: '0.75rem' }}>
-              투표 {item.votes || 0}표 | 인증글 {item.authCount || 0}개
-            </small>
-          </div>
+    <div className="hall-ranking">
+      <div className="hall-period-tabs" aria-label="명예의 전당 기간 선택">
+        {hallPeriodOptions.map((period) => (
           <button
+            key={period.key}
+            className={activePeriod === period.key ? 'active' : ''}
             type="button"
-            onClick={() => handleVote(item.id, item.name)}
-            style={{ background: '#0f172a', color: '#ffffff', border: 'none', padding: '8px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer' }}
+            onClick={() => setActivePeriod(period.key)}
           >
-            투표하기
+            {period.label}
           </button>
-        </article>
-      ))}
+        ))}
+      </div>
+
+      <div className="hall-score-note">
+        응원점수 + 팬덤 활동점수로 순위를 매겨요. 봉사활동은 일반 소모임보다 더 높은 점수로 반영돼요.
+      </div>
+
+      <div className="schedule-list hall-ranking-list">
+        {hallRows.map((item) => (
+          <article key={`${item.id}-${item.name}`}>
+            <div className="schedule-date hall-rank-badge">
+              <strong>{item.rank}</strong>
+              <span>위</span>
+            </div>
+
+            <div className="schedule-info hall-rank-info">
+              <span>{item.name} 팬덤</span>
+              <h3>{item.score.toLocaleString()}점</h3>
+              <div className="hall-score-breakdown">
+                <b>응원 {item.supportScore.toLocaleString()}</b>
+                <b>활동 {item.activityScore.toLocaleString()}</b>
+              </div>
+              <small>
+                투표 {item.votes.toLocaleString()}표 · 인증 {item.authCount.toLocaleString()}개 · 소모임 {item.meetups}회 · 봉사 {item.volunteer}회
+              </small>
+            </div>
+
+            <button type="button" onClick={() => handleVote(item.id, item.name)}>
+              응원하기
+            </button>
+          </article>
+        ))}
+      </div>
     </div>
   )
 }
+
 
 function App() {
   const [language, setLanguage] = useState(() => {
@@ -1482,7 +1908,7 @@ function App() {
 
     if (savedSingers) {
       try {
-        return JSON.parse(savedSingers)
+        return migrateFavoriteSingers(JSON.parse(savedSingers))
       } catch {
         return initialFavoriteSingers
       }
@@ -1639,7 +2065,7 @@ function App() {
         setFontSize={setFontSize}
         onBack={goBackFromVote}
         onOpenAiHelp={openAiHelp}
-        singerName={selectedSinger?.name || '윤하늘'}
+        singerName={selectedSinger?.name}
       />
     )
   }
@@ -1660,7 +2086,7 @@ function App() {
   }
 
   if (currentPage === 'aiHelp') {
-    return <AiHelpPage onBack={backFromAiHelp} />
+    return <AiHelpPage onBack={backFromAiHelp} dict={dict} />
   }
 
   if (currentPage === 'alerts') {
@@ -1691,10 +2117,10 @@ function App() {
               <article>
                 <div className="schedule-date">
                   <strong>🔔</strong>
-                  <span>알림</span>
+                  <span>{dict.alertLabel}</span>
                 </div>
                 <div className="schedule-info">
-                  <span>오늘</span>
+                  <span>{dict.today}</span>
                   <h3>{dict.alert1}</h3>
                 </div>
               </article>
@@ -1702,10 +2128,10 @@ function App() {
               <article>
                 <div className="schedule-date">
                   <strong>💜</strong>
-                  <span>인증</span>
+                  <span>{dict.certLabel}</span>
                 </div>
                 <div className="schedule-info">
-                  <span>방금</span>
+                  <span>{dict.justNow}</span>
                   <h3>{dict.alert2}</h3>
                 </div>
               </article>
@@ -1713,10 +2139,10 @@ function App() {
               <article>
                 <div className="schedule-date">
                   <strong>🚌</strong>
-                  <span>링크</span>
+                  <span>{dict.linkLabel}</span>
                 </div>
                 <div className="schedule-info">
-                  <span>업데이트</span>
+                  <span>{dict.updated}</span>
                   <h3>{dict.alert3}</h3>
                 </div>
               </article>
@@ -1746,11 +2172,11 @@ function App() {
 
   if (currentPage === 'singer' && selectedSinger) {
     const artistTabs = [
-      { key: 'board', icon: '📝', title: '게시판', desc: '팬 소식과 공지를 확인해요' },
-      { key: 'schedule', icon: '📅', title: '스케줄', desc: '다가오는 일정과 달력을 보여줘요' },
-      { key: 'vote', icon: '💜', title: '투표', desc: '오늘의 투표와 발자취를 확인해요' },
-      { key: 'bus', icon: '🚌', title: '버스대절', desc: '공연장 이동 노선과 좌석을 확인해요' },
-      { key: 'meetup', icon: '📍', title: '모임찾기', desc: '내 주변 팬 활동 모임을 찾아요' },
+      { key: 'board', icon: '📝', title: dict.artistTabs.board[0], desc: dict.artistTabs.board[1] },
+      { key: 'schedule', icon: '📅', title: dict.artistTabs.schedule[0], desc: dict.artistTabs.schedule[1] },
+      { key: 'vote', icon: '💜', title: dict.artistTabs.vote[0], desc: dict.artistTabs.vote[1] },
+      { key: 'bus', icon: '🚌', title: dict.artistTabs.bus[0], desc: dict.artistTabs.bus[1] },
+      { key: 'meetup', icon: '📍', title: dict.artistTabs.meetup[0], desc: dict.artistTabs.meetup[1] },
     ]
     const activeArtistTab = artistTabs.find((tab) => tab.key === artistDetailView)
 
@@ -1777,7 +2203,7 @@ function App() {
             <>
               <section className="welcome-section">
                 <p>{dict.singerHeader}</p>
-                <h2>{selectedSinger.name} 팬덤 공간</h2>
+                <h2>{selectedSinger.name} {dict.artistSpace}</h2>
               </section>
 
               <section className="section">
@@ -1799,9 +2225,9 @@ function App() {
 
               <section className="section">
                 <div className="notice-card">
-                  <p>내 주변 모임 알림</p>
-                  <h3>{selectedSinger.name} 팬 모임이 오늘 7시에 열려요.</h3>
-                  <small>버스대절, 인증글, 실시간 공지까지 한 번에 확인해 보세요.</small>
+                  <p>{dict.nearbyNotice}</p>
+                  <h3>{selectedSinger.name} {dict.fanMeetupToday}</h3>
+                  <small>{dict.noticeSmall}</small>
                 </div>
               </section>
             </>
@@ -1809,7 +2235,7 @@ function App() {
             <>
               <section className="artist-detail-toolbar">
                 <button type="button" onClick={backToArtistMenu}>
-                  ← {selectedSinger.name} 메뉴로
+                  ← {selectedSinger.name} {dict.backToMenu}
                 </button>
               </section>
 
@@ -1823,8 +2249,8 @@ function App() {
                 {artistDetailView === 'schedule' && (
                   <div className="singer-panel">
                     <div className="panel-title-row">
-                      <p>스케줄</p>
-                      <h3>다가오는 일정</h3>
+                      <p>{dict.artistTabs.schedule[0]}</p>
+                      <h3>{dict.scheduleUpcoming}</h3>
                     </div>
                     <SingerCalendar />
                   </div>
@@ -1833,10 +2259,10 @@ function App() {
                 {artistDetailView === 'vote' && (
                   <div className="singer-panel">
                     <FeatureSlot
-                      eyebrow="투표"
-                      title={`${selectedSinger.name} 투표 기능 연결 영역`}
-                      description="투표 완료 콜백에서 감사 인사 영상이나 인증 화면으로 이어지게 만들 수 있습니다."
-                      actionLabel="현재 임시 투표 화면 보기"
+                      eyebrow={dict.artistTabs.vote[0]}
+                      title={`${selectedSinger.name} ${dict.voteSlotTitle}`}
+                      description={dict.voteSlotText}
+                      actionLabel={dict.votePreview}
                       onAction={() => setCurrentPage('vote')}
                     />
                   </div>
@@ -1844,11 +2270,11 @@ function App() {
 
                 {artistDetailView === 'bus' && (
                   <div className="singer-panel">
-                    <BusCharterSection singerName={selectedSinger.name} />
+                    <BusCharterSection singerName={selectedSinger.name} dict={dict} />
                   </div>
                 )}
 
-                {artistDetailView === 'meetup' && <MeetupFinderSection />}
+                {artistDetailView === 'meetup' && <MeetupFinderSection dict={dict} />}
               </section>
             </>
           )}
@@ -1873,6 +2299,10 @@ function App() {
       </div>
     )
   }
+
+  // ================================
+  // 전체 홈
+  // ================================
 
   return (
     <div className="app">
@@ -1899,7 +2329,7 @@ function App() {
         <section className="section">
           <div className="section-heading">
             <div>
-              <p>MY ARTISTS</p>
+              <p>{dict.myArtistsEyebrow}</p>
               <h2>{dict.artistsTitle}</h2>
             </div>
 
@@ -1922,10 +2352,10 @@ function App() {
               favoriteSingers.map((singer) => (
                 <article key={singer.id} className={`artist-card ${singer.color}`}>
                   <button className="artist-card-main" type="button" onClick={() => openSingerFandom(singer)}>
-                    <div className="singer-avatar">{singer.initial}</div>
+                    <SingerAvatar singer={singer} />
 
                     <div className="artist-card-content">
-                      <p>함께한 지 {singer.fanDays}일</p>
+                      <p>{dict.togetherDays} {singer.fanDays}{dict.days}</p>
                       <h3>{singer.name}</h3>
                       <span>{singer.schedule}</span>
                     </div>
@@ -1945,8 +2375,8 @@ function App() {
         <section className="section">
           <div className="section-heading">
             <div>
-              <p>HALL OF FAME</p>
-              <h2>명예의 전당</h2>
+              <p>{dict.hallEyebrow}</p>
+              <h2>{dict.hallCardTitle}</h2>
             </div>
           </div>
 
