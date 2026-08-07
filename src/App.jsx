@@ -206,6 +206,12 @@ const sizeMap = {
   large: '1.1rem',
 }
 
+const appZoomMap = {
+  small: '0.95',
+  default: '1',
+  large: '1.1',
+}
+
 const initialEvents = [
   {
     id: 1,
@@ -343,6 +349,164 @@ const scheduleData = [
 ]
 
 const scheduleCategories = ['전체', '티켓 예매', '방송 출연', '앨범 발매', '콘서트']
+
+const busConcerts = [
+  {
+    id: 'seoul',
+    city: '서울콘',
+    title: '2026 전국투어 콘서트 - 서울',
+    venue: '올림픽체조경기장',
+    dates: [
+      {
+        id: 'seoul-0828',
+        label: '8월 28일 금요일',
+        time: '오후 7시 30분',
+        routes: [
+          {
+            id: 'seoul-0828-gangnam',
+            start: '서울 강남역',
+            destination: '올림픽체조경기장',
+            departure: '오후 4시 출발',
+            organizer: '하늘빛 수도권 팬연합',
+            seats: 37,
+            capacity: 45,
+            price: '18,000원',
+            status: '모집중',
+            stops: ['강남역 11번 출구', '잠실 종합운동장', '공연장 정문'],
+          },
+          {
+            id: 'seoul-0828-suwon',
+            start: '수원역',
+            destination: '올림픽체조경기장',
+            departure: '오후 3시 20분 출발',
+            organizer: '경기 남부 응원단',
+            seats: 28,
+            capacity: 40,
+            price: '22,000원',
+            status: '입금확인중',
+            stops: ['수원역 환승센터', '죽전 간이정류장', '공연장 정문'],
+          },
+        ],
+      },
+      {
+        id: 'seoul-0829',
+        label: '8월 29일 토요일',
+        time: '오후 6시',
+        routes: [
+          {
+            id: 'seoul-0829-incheon',
+            start: '인천터미널',
+            destination: '올림픽체조경기장',
+            departure: '오후 2시 40분 출발',
+            organizer: '인천 별빛 팬클럽',
+            seats: 44,
+            capacity: 44,
+            price: '24,000원',
+            status: '마감임박',
+            stops: ['인천터미널', '부평역', '공연장 정문'],
+          },
+          {
+            id: 'seoul-0829-cheonan',
+            start: '천안터미널',
+            destination: '올림픽체조경기장',
+            departure: '오후 1시 30분 출발',
+            organizer: '충청 팬연합',
+            seats: 19,
+            capacity: 40,
+            price: '29,000원',
+            status: '모집중',
+            stops: ['천안터미널', '죽전 간이정류장', '공연장 정문'],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'busan',
+    city: '부산콘',
+    title: '2026 전국투어 콘서트 - 부산',
+    venue: '부산 벡스코 오디토리움',
+    dates: [
+      {
+        id: 'busan-0912',
+        label: '9월 12일 토요일',
+        time: '오후 6시',
+        routes: [
+          {
+            id: 'busan-0912-daegu',
+            start: '동대구역',
+            destination: '부산 벡스코',
+            departure: '오후 1시 출발',
+            organizer: '영남 팬연합',
+            seats: 31,
+            capacity: 42,
+            price: '26,000원',
+            status: '모집중',
+            stops: ['동대구역 3번 출구', '경산 정류장', '벡스코 제1전시장'],
+          },
+          {
+            id: 'busan-0912-changwon',
+            start: '창원중앙역',
+            destination: '부산 벡스코',
+            departure: '오후 2시 10분 출발',
+            organizer: '경남 응원단',
+            seats: 22,
+            capacity: 36,
+            price: '19,000원',
+            status: '모집중',
+            stops: ['창원중앙역', '김해시청역', '벡스코 제1전시장'],
+          },
+        ],
+      },
+      {
+        id: 'busan-0913',
+        label: '9월 13일 일요일',
+        time: '오후 5시',
+        routes: [
+          {
+            id: 'busan-0913-ulsan',
+            start: '울산 시외버스터미널',
+            destination: '부산 벡스코',
+            departure: '오후 1시 40분 출발',
+            organizer: '울산 하모니 팬클럽',
+            seats: 18,
+            capacity: 38,
+            price: '17,000원',
+            status: '모집중',
+            stops: ['울산 시외버스터미널', '양산역', '벡스코 제1전시장'],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'gwangju',
+    city: '광주콘',
+    title: '2026 전국투어 콘서트 - 광주',
+    venue: '광주여대 유니버시아드체육관',
+    dates: [
+      {
+        id: 'gwangju-0926',
+        label: '9월 26일 토요일',
+        time: '오후 6시',
+        routes: [
+          {
+            id: 'gwangju-0926-jeonju',
+            start: '전주 월드컵경기장',
+            destination: '광주여대 체육관',
+            departure: '오후 1시 20분 출발',
+            organizer: '호남 팬연합',
+            seats: 25,
+            capacity: 40,
+            price: '23,000원',
+            status: '모집중',
+            stops: ['전주 월드컵경기장', '정읍 휴게소', '광주여대 정문'],
+          },
+        ],
+      },
+    ],
+  },
+]
 
 function SingerCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date(2026, 7, 1))
@@ -565,6 +729,187 @@ function AiHelpPage({ onBack }) {
           </div>
         </section>
       </main>
+    </div>
+  )
+}
+
+function BusCharterSection({ singerName }) {
+  const [concerts, setConcerts] = useState(busConcerts)
+  const [selectedConcertId, setSelectedConcertId] = useState(busConcerts[0].id)
+  const selectedConcert = concerts.find((concert) => concert.id === selectedConcertId) || concerts[0]
+  const [selectedDateId, setSelectedDateId] = useState(selectedConcert.dates[0].id)
+  const selectedDate = selectedConcert.dates.find((date) => date.id === selectedDateId) || selectedConcert.dates[0]
+  const [selectedRouteId, setSelectedRouteId] = useState(selectedDate.routes[0].id)
+  const selectedRoute = selectedDate.routes.find((route) => route.id === selectedRouteId) || selectedDate.routes[0]
+
+  const selectConcert = (concertId) => {
+    const nextConcert = concerts.find((concert) => concert.id === concertId) || concerts[0]
+    const nextDate = nextConcert.dates[0]
+
+    setSelectedConcertId(nextConcert.id)
+    setSelectedDateId(nextDate.id)
+    setSelectedRouteId(nextDate.routes[0].id)
+  }
+
+  const selectDate = (dateId) => {
+    const nextDate = selectedConcert.dates.find((date) => date.id === dateId) || selectedConcert.dates[0]
+
+    setSelectedDateId(nextDate.id)
+    setSelectedRouteId(nextDate.routes[0].id)
+  }
+
+  const toggleReserve = (routeId) => {
+    setConcerts((currentConcerts) =>
+      currentConcerts.map((concert) => ({
+        ...concert,
+        dates: concert.dates.map((date) => ({
+          ...date,
+          routes: date.routes.map((route) => {
+            if (route.id !== routeId) return route
+
+            const reserved = !route.reserved
+            window.alert(
+              reserved
+                ? `${concert.city} ${date.label}\n${route.start} 출발 버스 대절 신청이 임시 저장되었습니다.`
+                : `${concert.city} ${date.label}\n${route.start} 출발 신청이 취소되었습니다.`,
+            )
+            return { ...route, reserved }
+          }),
+        })),
+      })),
+    )
+  }
+
+  return (
+    <div className="bus-charter-panel">
+      <div className="bus-hero">
+        <p>BUS CHARTER</p>
+        <h3>{singerName} 공연 버스 대절</h3>
+        <span>전국투어 공연과 회차를 고른 뒤 출발지, 도착지, 경유지를 확인하고 신청해요.</span>
+      </div>
+
+      <div className="bus-step-block">
+        <div className="bus-step-title">
+          <span>STEP 1</span>
+          <h4>공연 선택</h4>
+        </div>
+        <div className="bus-concert-grid">
+          {concerts.map((concert) => (
+            <button
+              key={concert.id}
+              type="button"
+              className={`bus-concert-card ${selectedConcertId === concert.id ? 'active' : ''}`}
+              onClick={() => selectConcert(concert.id)}
+            >
+              <strong>{concert.city}</strong>
+              <span>{concert.venue}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="bus-step-block">
+        <div className="bus-step-title">
+          <span>STEP 2</span>
+          <h4>공연 일자 선택</h4>
+        </div>
+        <div className="bus-date-tabs">
+          {selectedConcert.dates.map((date) => (
+            <button
+              key={date.id}
+              type="button"
+              className={selectedDateId === date.id ? 'active' : ''}
+              onClick={() => selectDate(date.id)}
+            >
+              <strong>{date.label}</strong>
+              <span>{date.time}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="bus-step-block">
+        <div className="bus-step-title">
+          <span>STEP 3</span>
+          <h4>출발 노선 선택</h4>
+        </div>
+        <div className="bus-route-list">
+        {selectedDate.routes.map((route) => {
+          const percent = Math.round((route.seats / route.capacity) * 100)
+
+          return (
+            <button
+              key={route.id}
+              type="button"
+              className={`bus-route-card ${selectedRouteId === route.id ? 'active' : ''}`}
+              onClick={() => setSelectedRouteId(route.id)}
+            >
+              <div>
+                <span className="bus-status">{route.status}</span>
+                <h4>{route.start} → {route.destination}</h4>
+                <p>{route.departure}</p>
+              </div>
+              <div className="bus-seat-meter" aria-label={`좌석 ${route.seats}석 신청`}>
+                <span style={{ width: `${percent}%` }} />
+              </div>
+              <small>{route.seats}/{route.capacity}석 신청</small>
+            </button>
+          )
+        })}
+        </div>
+      </div>
+
+      <div className="bus-detail-card">
+        <div className="panel-title-row">
+          <p>신청 정보 확인</p>
+          <h3>{selectedConcert.title}</h3>
+        </div>
+
+        <div className="bus-detail-grid">
+          <div>
+            <p>공연 일자</p>
+            <strong>{selectedDate.label} {selectedDate.time}</strong>
+          </div>
+          <div>
+            <p>출발지</p>
+            <strong>{selectedRoute.start}</strong>
+          </div>
+          <div>
+            <p>도착지</p>
+            <strong>{selectedRoute.destination}</strong>
+          </div>
+          <div>
+            <p>출발 시간</p>
+            <strong>{selectedRoute.departure}</strong>
+          </div>
+          <div>
+            <p>회비</p>
+            <strong>{selectedRoute.price}</strong>
+          </div>
+          <div>
+            <p>주최</p>
+            <strong>{selectedRoute.organizer}</strong>
+          </div>
+        </div>
+
+        <div className="bus-stop-list">
+          <p>출발지 · 경유지 · 도착지</p>
+          {selectedRoute.stops.map((stop, index) => (
+            <div key={stop}>
+              <span>{index + 1}</span>
+              <strong>{stop}</strong>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          className={selectedRoute.reserved ? 'bus-reserve-button reserved' : 'bus-reserve-button'}
+          onClick={() => toggleReserve(selectedRoute.id)}
+        >
+          {selectedRoute.reserved ? '신청 취소하기' : '버스 대절 신청하기'}
+        </button>
+      </div>
     </div>
   )
 }
@@ -1148,6 +1493,7 @@ function App() {
 
   const [currentPage, setCurrentPage] = useState('home')
   const [previousPage, setPreviousPage] = useState('home')
+  const [settingsInitialView, setSettingsInitialView] = useState('home')
   const [selectedSinger, setSelectedSinger] = useState(null)
   const [artistSubView, setArtistSubView] = useState('menu')
   const [artistDetailView, setArtistDetailView] = useState('board')
@@ -1170,6 +1516,7 @@ function App() {
   useEffect(() => {
     const nextSize = sizeMap[fontSize] || sizeMap.default
     document.documentElement.style.fontSize = nextSize
+    document.body.style.zoom = appZoomMap[fontSize] || appZoomMap.default
   }, [fontSize])
 
   const dict = translations[language] || translations.ko
@@ -1236,8 +1583,13 @@ function App() {
     setCurrentPage('singer')
   }
 
-  const openSettings = () => {
+  const openSettings = (initialView = 'home') => {
+    setSettingsInitialView(initialView)
     setCurrentPage('settings')
+  }
+
+  const openLanguageSettings = () => {
+    openSettings('language')
   }
 
   const openAiHelp = () => {
@@ -1301,6 +1653,7 @@ function App() {
         setFontSize={setFontSize}
         onBack={selectedSinger ? () => setCurrentPage('singer') : goHome}
         onOpenAiHelp={openAiHelp}
+        initialView={settingsInitialView}
         settingsOnly
       />
     )
@@ -1322,7 +1675,7 @@ function App() {
           <HeaderActions
             languageLabel={dict.languageButton}
             aiLabel={dict.aiHelpButton}
-            onLanguage={openSettings}
+            onLanguage={openLanguageSettings}
             onAiHelp={openAiHelp}
           />
         </header>
@@ -1382,7 +1735,7 @@ function App() {
             {dict.navAlerts}
           </button>
 
-          <button type="button" onClick={openSettings}>
+          <button type="button" onClick={() => openSettings()}>
             <span>⚙️</span>
             {dict.navSettings}
           </button>
@@ -1396,6 +1749,7 @@ function App() {
       { key: 'board', icon: '📝', title: '게시판', desc: '팬 소식과 공지를 확인해요' },
       { key: 'schedule', icon: '📅', title: '스케줄', desc: '다가오는 일정과 달력을 보여줘요' },
       { key: 'vote', icon: '💜', title: '투표', desc: '오늘의 투표와 발자취를 확인해요' },
+      { key: 'bus', icon: '🚌', title: '버스대절', desc: '공연장 이동 노선과 좌석을 확인해요' },
       { key: 'meetup', icon: '📍', title: '모임찾기', desc: '내 주변 팬 활동 모임을 찾아요' },
     ]
     const activeArtistTab = artistTabs.find((tab) => tab.key === artistDetailView)
@@ -1413,7 +1767,7 @@ function App() {
           <HeaderActions
             languageLabel={dict.languageButton}
             aiLabel={dict.aiHelpButton}
-            onLanguage={openSettings}
+            onLanguage={openLanguageSettings}
             onAiHelp={openAiHelp}
           />
         </header>
@@ -1488,6 +1842,12 @@ function App() {
                   </div>
                 )}
 
+                {artistDetailView === 'bus' && (
+                  <div className="singer-panel">
+                    <BusCharterSection singerName={selectedSinger.name} />
+                  </div>
+                )}
+
                 {artistDetailView === 'meetup' && <MeetupFinderSection />}
               </section>
             </>
@@ -1505,7 +1865,7 @@ function App() {
             {dict.navAlerts}
           </button>
 
-          <button className="active" type="button" onClick={openSettings}>
+          <button className="active" type="button" onClick={() => openSettings()}>
             <span>⚙️</span>
             {dict.navSettings}
           </button>
@@ -1525,7 +1885,7 @@ function App() {
         <HeaderActions
           languageLabel={dict.languageButton}
           aiLabel={dict.aiHelpButton}
-          onLanguage={openSettings}
+          onLanguage={openLanguageSettings}
           onAiHelp={openAiHelp}
         />
       </header>
@@ -1605,7 +1965,7 @@ function App() {
           {dict.navAlerts}
         </button>
 
-        <button type="button" onClick={openSettings}>
+        <button type="button" onClick={() => openSettings()}>
           <span>⚙️</span>
           {dict.navSettings}
         </button>

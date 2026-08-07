@@ -178,10 +178,11 @@ export default function VoteHubView({
   setFontSize,
   onBack,
   onOpenAiHelp,
+  initialView = 'home',
   settingsOnly = false,
   singerName = '우리 가수',
 }) {
-  const [view, setView] = useState('home')
+  const [view, setView] = useState(initialView)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [posted, setPosted] = useState(false)
@@ -231,37 +232,12 @@ export default function VoteHubView({
       return
     }
 
-    try {
-      const formData = new FormData()
-      formData.append('title', title)
-      formData.append('content', content)
-      formData.append('category', '투표인증')
-      formData.append('singerName', singerName)
-      formData.append('singerId', '1')
-
-      const res = await fetch(`${API_URL}/api/posts`, {
-        method: 'POST',
-        body: formData,
-      })
-      const data = await res.json()
-
-      if (data.success) {
-        setPosted(true)
-        window.alert(dict.certifyDone)
-        setTitle('')
-        setContent('')
-        setView('home')
-      } else {
-        window.alert('인증글 등록 실패: ' + (data.message || '오류가 발생했습니다.'))
-      }
-    } catch (err) {
-      console.error('투표 인증 처리 중 에러:', err)
-      window.alert('서버 연동 중 오류가 발생했습니다.')
-    }
+    setPosted(true)
+    setView('home')
+    window.alert(dict.certifyDone)
   }
 
-  // 백엔드로 직접 투표수 카운트 증가시키는 함수
-  const completeVote = async () => {
+  const completeVote = () => {
     setView('thanks')
     setShowThanksClip(true)
 
