@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const translations = {
   ko: {
@@ -178,11 +178,12 @@ export default function VoteHubView({
   setFontSize,
   onBack,
   onOpenAiHelp,
+  initialView = 'home',
   settingsOnly = false,
   singerName = '우리 가수',
   rankingItems = [],
 }) {
-  const [view, setView] = useState('home')
+  const [view, setView] = useState(initialView)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [posted, setPosted] = useState(false)
@@ -207,6 +208,12 @@ export default function VoteHubView({
     setView('home')
     window.alert(dict.certifyDone)
   }
+
+  useEffect(() => {
+    if (settingsOnly) {
+      setView(initialView)
+    }
+  }, [initialView, settingsOnly])
 
   const completeVote = () => {
     setView('thanks')
