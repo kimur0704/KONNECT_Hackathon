@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import VoteHubView from './pages/VoteHubView'
 
+const APP_NAME = '트롯마당'
+const LANGUAGE_STORAGE_KEY = 'trot-madang-language'
+const FONT_SIZE_STORAGE_KEY = 'trot-madang-font-size'
+
 const initialFavoriteSingers = [
   {
     id: 1,
@@ -2004,11 +2008,11 @@ function HallOfFameSection() {
 
 function App() {
   const [language, setLanguage] = useState(() => {
-    const savedLanguage = localStorage.getItem('trot-link-language')
+    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY) || localStorage.getItem('trot-link-language')
     return savedLanguage || 'ko'
   })
   const [fontSize, setFontSize] = useState(() => {
-    const savedFontSize = localStorage.getItem('trot-link-font-size')
+    const savedFontSize = localStorage.getItem(FONT_SIZE_STORAGE_KEY) || localStorage.getItem('trot-link-font-size')
     return savedFontSize || 'default'
   })
   const [favoriteSingers, setFavoriteSingers] = useState(() => {
@@ -2040,11 +2044,11 @@ function App() {
   }, [favoriteSingers])
 
   useEffect(() => {
-    localStorage.setItem('trot-link-language', language)
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
   }, [language])
 
   useEffect(() => {
-    localStorage.setItem('trot-link-font-size', fontSize)
+    localStorage.setItem(FONT_SIZE_STORAGE_KEY, fontSize)
   }, [fontSize])
 
   useEffect(() => {
@@ -2444,8 +2448,8 @@ function App() {
     <div className="app">
       <header className="top-header">
         <div>
-          <p className="small-text">TROT LINK</p>
-          <h1>TROT LINK</h1>
+          <p className="small-text">{APP_NAME}</p>
+          <h1>{APP_NAME}</h1>
         </div>
 
         <HeaderActions

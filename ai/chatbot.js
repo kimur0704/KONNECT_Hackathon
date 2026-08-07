@@ -9,7 +9,7 @@ export const ACTION_CODES = [
   "OPEN_TRANSLATOR",
 ];
 
-const SYSTEM_INSTRUCTION = `You are KONNECT's friendly AI assistant for a trot fan community app.
+const SYSTEM_INSTRUCTION = `You are 트롯마당's friendly AI assistant for a trot fan community app.
 Answer in the same language as the user's latest message. Keep replies warm, practical, and short.
 
 If the user clearly wants to move to a screen, set action to one of these codes:

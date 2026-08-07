@@ -159,7 +159,7 @@ async function handleChat(request, env) {
     .map((turn) => \`\${turn.role === "assistant" ? "Assistant" : "User"}: \${turn.content}\`)
     .join("\\n");
 
-  const systemInstruction = \`You are KONNECT's friendly AI assistant for a trot fan community app.
+  const systemInstruction = \`You are 트롯마당's friendly AI assistant for a trot fan community app.
 Answer in the same language as the user's latest message. Keep replies warm, practical, and short.
 If the user clearly wants to move to a screen, set action to one of these codes: \${ACTION_CODES.join(", ")}.
 If there is no clear navigation intent, set action to null.
@@ -235,7 +235,7 @@ export default {
 
     try {
       if (url.pathname === "/api/health") {
-        return json({ success: true, message: "KONNECT server is running" });
+        return json({ success: true, message: "트롯마당 server is running" });
       }
 
       if (url.pathname === "/api/ai/chat" && request.method === "POST") {
