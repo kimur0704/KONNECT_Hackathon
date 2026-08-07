@@ -604,6 +604,277 @@ button:focus-visible {
   cursor: pointer;
 }
 
+.bus-charter-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.bus-hero {
+  padding: 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #2f5f86, #6d3ba2);
+  color: white;
+}
+
+.bus-hero p {
+  margin: 0 0 7px;
+  font-size: 11px;
+  font-weight: 900;
+  opacity: 0.82;
+}
+
+.bus-hero h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.bus-hero span {
+  display: block;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.bus-route-list {
+  display: grid;
+  gap: 10px;
+}
+
+.bus-step-block {
+  display: grid;
+  gap: 10px;
+}
+
+.bus-step-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bus-step-title span {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #eaf5ff;
+  color: #2f5f86;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.bus-step-title h4 {
+  margin: 0;
+  color: #33263d;
+  font-size: 15px;
+}
+
+.bus-concert-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bus-concert-card,
+.bus-date-tabs button {
+  min-width: 0;
+  border: 1px solid #e8daf0;
+  background: #fbf8ff;
+  color: #302a35;
+  cursor: pointer;
+}
+
+.bus-concert-card {
+  display: flex;
+  min-height: 86px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 8px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.bus-concert-card.active,
+.bus-date-tabs button.active {
+  border-color: #7140a0;
+  background: white;
+  box-shadow: 0 8px 18px rgba(70, 48, 85, 0.1);
+}
+
+.bus-concert-card strong {
+  margin-bottom: 5px;
+  color: #7140a0;
+  font-size: 15px;
+}
+
+.bus-concert-card span {
+  color: #786d80;
+  font-size: 11px;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.bus-date-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bus-date-tabs button {
+  display: flex;
+  min-height: 66px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 14px;
+  text-align: left;
+}
+
+.bus-date-tabs strong {
+  margin-bottom: 4px;
+  color: #33263d;
+  font-size: 13px;
+}
+
+.bus-date-tabs span {
+  color: #786d80;
+  font-size: 12px;
+}
+
+.bus-route-card {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #e8daf0;
+  border-radius: 16px;
+  background: #fbf8ff;
+  color: #302a35;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bus-route-card.active {
+  border-color: #7140a0;
+  background: white;
+  box-shadow: 0 10px 22px rgba(70, 48, 85, 0.1);
+}
+
+.bus-status {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eaf5ff;
+  color: #2f5f86;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.bus-route-card h4 {
+  margin: 0 0 5px;
+  font-size: 15px;
+}
+
+.bus-route-card p,
+.bus-route-card small {
+  margin: 0;
+  color: #786d80;
+  font-size: 12px;
+}
+
+.bus-seat-meter {
+  overflow: hidden;
+  height: 8px;
+  margin: 12px 0 7px;
+  border-radius: 999px;
+  background: #eee5f4;
+}
+
+.bus-seat-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2f8f83, #8e5ab5);
+}
+
+.bus-detail-card {
+  padding: 16px;
+  border: 1px solid #eadff2;
+  border-radius: 18px;
+  background: white;
+}
+
+.bus-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.bus-detail-grid div {
+  padding: 12px;
+  border-radius: 14px;
+  background: #f8f3fc;
+}
+
+.bus-detail-grid p,
+.bus-stop-list p {
+  margin: 0 0 5px;
+  color: #8e5ab5;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.bus-detail-grid strong {
+  color: #33263d;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.bus-stop-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.bus-stop-list div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border: 1px solid #eee7f2;
+  border-radius: 14px;
+}
+
+.bus-stop-list span {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #7140a0;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.bus-stop-list strong {
+  color: #44384c;
+  font-size: 13px;
+}
+
+.bus-reserve-button {
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: 14px;
+  background: #7140a0;
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.bus-reserve-button.reserved {
+  background: #62586a;
+}
+
 .artist-detail-toolbar {
   margin: 0 0 14px;
 }
