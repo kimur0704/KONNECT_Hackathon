@@ -1024,7 +1024,63 @@ function SingerAvatar({ singer }) {
   return <div className="singer-avatar">{singer.initial}</div>
 }
 
-function AiHelpPage({ onBack, dict }) {
+function AiHelpPage({ onBack, dict, onNavigateAction }) {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+  const [messages, setMessages] = useState([
+    {
+      role: 'assistant',
+      content: '안녕하세요! 게시판, 투표 인증, 언어 설정, 마이페이지 이동을 도와드릴게요.',
+    },
+  ])
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const sendMessage = async (event) => {
+    event.preventDefault()
+    const nextMessage = input.trim()
+    if (!nextMessage || loading) return
+
+    const nextMessages = [...messages, { role: 'user', content: nextMessage }]
+    setMessages(nextMessages)
+    setInput('')
+    setError('')
+    setLoading(true)
+
+    try {
+      const res = await fetch(`${API_URL}/api/ai/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: nextMessage,
+          history: messages,
+        }),
+      })
+      const data = await res.json()
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.detail || data.message || 'AI 응답을 받지 못했어요.')
+      }
+
+      setMessages((current) => [...current, { role: 'assistant', content: data.reply }])
+
+      if (data.action) {
+        onNavigateAction(data.action)
+      }
+    } catch (err) {
+      setError(err.message)
+      setMessages((current) => [
+        ...current,
+        {
+          role: 'assistant',
+          content: '지금은 AI 연결이 원활하지 않아요. 서버와 GEMINI_API_KEY를 확인해 주세요.',
+        },
+      ])
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="app">
       <header className="top-header">
@@ -1038,28 +1094,31 @@ function AiHelpPage({ onBack, dict }) {
       </header>
 
       <main className="page-content">
-        <section className="welcome-section">
-          <p>{dict.assistantIntro}</p>
-          <h2>{dict.assistantHeadline}</h2>
-        </section>
-
         <section className="section">
-          <div className="ai-help-panel">
-            <article>
-              <span>01</span>
-              <h3>{dict.assistantVoteTitle}</h3>
-              <p>{dict.assistantVoteText}</p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>{dict.assistantScheduleTitle}</h3>
-              <p>{dict.assistantScheduleText}</p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>{dict.assistantCommunityTitle}</h3>
-              <p>{dict.assistantCommunityText}</p>
-            </article>
+          <div className="ai-chat-panel">
+            <div className="ai-chat-messages">
+              {messages.map((message, index) => (
+                <div key={`${message.role}-${index}`} className={`ai-chat-bubble ${message.role}`}>
+                  {message.content}
+                </div>
+              ))}
+              {loading && <div className="ai-chat-bubble assistant">답변을 준비하고 있어요...</div>}
+            </div>
+
+            {error && <p className="ai-chat-error">{error}</p>}
+
+            <form className="ai-chat-form" onSubmit={sendMessage}>
+              <input
+                type="text"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder="예: 게시판 열어줘"
+                disabled={loading}
+              />
+              <button type="submit" disabled={loading || !input.trim()}>
+                보내기
+              </button>
+            </form>
           </div>
         </section>
       </main>
@@ -1418,6 +1477,23 @@ function SingerBoardSection({ singer }) {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
+  const localBlockRules = [
+    {
+      reason: '자해/자살 등 극단적 표현',
+      pattern: /(자살|자해|죽고\s*싶|죽어\s*버리|극단적\s*선택|목\s*매|투신|suicide|self[-\s]?harm|kill\s+myself)/i,
+    },
+    {
+      reason: '강한 욕설',
+      pattern: /(시발|씨발|ㅅㅂ|병신|븅신|개새끼|새끼|꺼져|좆|존나|fuck|fucking|shit|bitch|asshole)/i,
+    },
+  ]
+
+  const getLocalBlockReason = (...fields) => {
+    const combinedText = fields.filter(Boolean).join('\n')
+    const rule = localBlockRules.find(({ pattern }) => pattern.test(combinedText))
+    return rule?.reason || null
+  }
+
   const fetchPosts = async (cat) => {
     setLoading(true)
     try {
@@ -1452,6 +1528,12 @@ function SingerBoardSection({ singer }) {
       return
     }
 
+    const localBlockReason = getLocalBlockReason(title, content)
+    if (localBlockReason) {
+      window.alert(`AI 필터링으로 게시글 등록이 제한되었습니다. 사유: ${localBlockReason}`)
+      return
+    }
+
     const formData = new FormData()
     formData.append('title', title)
     formData.append('content', content)
@@ -1475,9 +1557,12 @@ function SingerBoardSection({ singer }) {
         setMediaFile(null)
         setView('list')
         fetchPosts(selectedCategory)
+      } else {
+        window.alert(data.message || '게시글 등록에 실패했습니다.')
       }
     } catch (err) {
       console.error('글 작성 실패:', err)
+      window.alert('게시글 등록 중 오류가 발생했습니다.')
     }
   }
 
@@ -2079,6 +2164,33 @@ function App() {
     setCurrentPage(previousPage === 'aiHelp' ? 'home' : previousPage)
   }
 
+  const handleAiNavigation = (action) => {
+    if (action === 'OPEN_HOME') {
+      goHome()
+      return
+    }
+
+    if (action === 'OPEN_PROFILE' || action === 'OPEN_SETTINGS') {
+      openSettings()
+      return
+    }
+
+    if (action === 'OPEN_TRANSLATOR') {
+      openLanguageSettings()
+      return
+    }
+
+    if (action === 'OPEN_BOARD') {
+      const singer = selectedSinger || favoriteSingers[0]
+      if (singer) {
+        setSelectedSinger(singer)
+        setArtistDetailView('board')
+        setArtistSubView('detail')
+        setCurrentPage('singer')
+      }
+    }
+  }
+
   if (currentPage === 'vote') {
     return (
       <VoteHubView
@@ -2109,7 +2221,7 @@ function App() {
   }
 
   if (currentPage === 'aiHelp') {
-    return <AiHelpPage onBack={backFromAiHelp} dict={dict} />
+    return <AiHelpPage onBack={backFromAiHelp} dict={dict} onNavigateAction={handleAiNavigation} />
   }
 
   if (currentPage === 'alerts') {
