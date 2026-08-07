@@ -1025,7 +1025,7 @@ function SingerAvatar({ singer }) {
 }
 
 function AiHelpPage({ onBack, dict, onNavigateAction }) {
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+  const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3001')
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -1475,7 +1475,7 @@ function SingerBoardSection({ singer }) {
   const [content, setContent] = useState('')
   const [mediaFile, setMediaFile] = useState(null)
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+  const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3001')
 
   const localBlockRules = [
     {
