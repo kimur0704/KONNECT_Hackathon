@@ -1168,28 +1168,28 @@ function BusCharterSection({ singerName, dict }) {
           <h4>{dict.busStepRoute}</h4>
         </div>
         <div className="bus-route-list">
-        {selectedDate.routes.map((route) => {
-          const percent = Math.round((route.seats / route.capacity) * 100)
+          {selectedDate.routes.map((route) => {
+            const percent = Math.round((route.seats / route.capacity) * 100)
 
-          return (
-            <button
-              key={route.id}
-              type="button"
-              className={`bus-route-card ${selectedRouteId === route.id ? 'active' : ''}`}
-              onClick={() => setSelectedRouteId(route.id)}
-            >
-              <div>
-                <span className="bus-status">{route.status}</span>
-                <h4>{route.start} → {route.destination}</h4>
-                <p>{route.departure}</p>
-              </div>
-              <div className="bus-seat-meter" aria-label={`좌석 ${route.seats}석 신청`}>
-                <span style={{ width: `${percent}%` }} />
-              </div>
-              <small>{route.seats}/{route.capacity} {dict.busSeats}</small>
-            </button>
-          )
-        })}
+            return (
+              <button
+                key={route.id}
+                type="button"
+                className={`bus-route-card ${selectedRouteId === route.id ? 'active' : ''}`}
+                onClick={() => setSelectedRouteId(route.id)}
+              >
+                <div>
+                  <span className="bus-status">{route.status}</span>
+                  <h4>{route.start} → {route.destination}</h4>
+                  <p>{route.departure}</p>
+                </div>
+                <div className="bus-seat-meter" aria-label={`좌석 ${route.seats}석 신청`}>
+                  <span style={{ width: `${percent}%` }} />
+                </div>
+                <small>{route.seats}/{route.capacity} {dict.busSeats}</small>
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -1403,7 +1403,7 @@ function MeetupFinderSection({ dict }) {
 }
 
 /* =================================================================
-   게시판 세로 메뉴 및 개별 연동 컴포넌트
+   [4개 게시판 구현] 세로 메뉴 (응원 / 자유 / 투표인증 / 홍보)
 ================================================================= */
 function SingerBoardSection({ singer }) {
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -1498,6 +1498,7 @@ function SingerBoardSection({ singer }) {
     }
   }
 
+  // 1. 게시판 선택 세로 메뉴 화면 (📢 홍보 게시판 포함 4개)
   if (!selectedCategory) {
     return (
       <div style={{ background: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
@@ -1574,11 +1575,34 @@ function SingerBoardSection({ singer }) {
             </div>
             <span style={{ fontSize: '1.2rem', color: '#ff2a6d' }}>›</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => openCategoryBoard('홍보')}
+            style={{
+              padding: '16px',
+              borderRadius: '12px',
+              border: '2px solid #8b5cf6',
+              background: '#f5f3ff',
+              textAlign: 'left',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <div>
+              <strong style={{ fontSize: '1.05rem', color: '#6d28d9', display: 'block' }}>📢 홍보 게시판</strong>
+              <small style={{ color: '#7c3aed', fontSize: '0.8rem' }}>방송 무대 클립, 유튜브 링크 및 생일 카페/행사 홍보</small>
+            </div>
+            <span style={{ fontSize: '1.2rem', color: '#8b5cf6' }}>›</span>
+          </button>
         </div>
       </div>
     )
   }
 
+  // 2. 선택한 게시판 내 목록/작성/상세 화면
   return (
     <div style={{ background: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
       <button
@@ -1591,7 +1615,7 @@ function SingerBoardSection({ singer }) {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#0f172a', fontWeight: 'bold' }}>
-          {selectedCategory === '투표인증' ? '✅ 투표 인증' : selectedCategory === '응원' ? '📣 응원 게시판' : '💬 자유 게시판'}
+          {selectedCategory === '투표인증' ? '✅ 투표 인증' : selectedCategory === '응원' ? '📣 응원 게시판' : selectedCategory === '홍보' ? '📢 홍보 게시판' : '💬 자유 게시판'}
         </h4>
         {view === 'list' && (
           <button
@@ -1625,7 +1649,7 @@ function SingerBoardSection({ singer }) {
                   style={{ padding: '14px', border: '1px solid #e2e8f0', borderRadius: '10px', background: '#f8fafc', cursor: 'pointer' }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <span style={{ fontSize: '0.8rem', color: '#ff2a6d', fontWeight: 'bold' }}>[{post.category}]</span>
+                    <span style={{ fontSize: '0.8rem', color: post.category === '홍보' ? '#6d28d9' : '#ff2a6d', fontWeight: 'bold' }}>[{post.category}]</span>
                     {post.mediaUrl && <span style={{ fontSize: '0.75rem', color: '#2563eb', fontWeight: 'bold' }}>📷 사진/영상 있음</span>}
                   </div>
                   <h5 style={{ margin: '0 0 6px 0', fontSize: '1rem', color: '#0f172a', fontWeight: '800' }}>{post.title}</h5>
@@ -1652,7 +1676,7 @@ function SingerBoardSection({ singer }) {
             required
           />
           <textarea
-            placeholder={selectedCategory === '투표인증' ? '투표 완료 인증 소감과 메시지를 남겨주세요.' : '내용을 작성해주세요.'}
+            placeholder={selectedCategory === '홍보' ? '방송 링크, 행사 장소 및 홍보 내용을 적어주세요.' : '내용을 작성해주세요.'}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', minHeight: '110px', resize: 'none' }}
@@ -1699,7 +1723,7 @@ function SingerBoardSection({ singer }) {
             ← 목록으로 돌아가기
           </button>
           <div style={{ padding: '16px', border: '1px solid #e2e8f0', borderRadius: '10px', background: '#ffffff' }}>
-            <span style={{ fontSize: '0.8rem', color: '#ff2a6d', fontWeight: 'bold' }}>[{selectedPost.category}]</span>
+            <span style={{ fontSize: '0.8rem', color: selectedPost.category === '홍보' ? '#6d28d9' : '#ff2a6d', fontWeight: 'bold' }}>[{selectedPost.category}]</span>
             <h4 style={{ margin: '6px 0 12px 0', fontSize: '1.15rem', color: '#0f172a', fontWeight: '800' }}>{selectedPost.title}</h4>
             <p style={{ fontSize: '0.95rem', color: '#334155', lineHeight: '1.6', whiteSpace: 'pre-line' }}>{selectedPost.content}</p>
 
@@ -1893,7 +1917,6 @@ function HallOfFameSection() {
   )
 }
 
-
 function App() {
   const [language, setLanguage] = useState(() => {
     const savedLanguage = localStorage.getItem('trot-link-language')
@@ -2065,7 +2088,7 @@ function App() {
         setFontSize={setFontSize}
         onBack={goBackFromVote}
         onOpenAiHelp={openAiHelp}
-        singerName={selectedSinger?.name}
+        singerName={selectedSinger?.name || '임영웅'}
       />
     )
   }
@@ -2240,6 +2263,7 @@ function App() {
               </section>
 
               <section className="section">
+                {/* 게시판 세로 메뉴 (응원/자유/투표인증/홍보 4개 구현) */}
                 {artistDetailView === 'board' && (
                   <div className="singer-panel">
                     <SingerBoardSection singer={selectedSinger} />
