@@ -32,7 +32,7 @@ app.use("/api/ai", aiRouter);
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
-    message: "KONNECT server is running",
+    message: "트롯마당 server is running",
   });
 });
 
