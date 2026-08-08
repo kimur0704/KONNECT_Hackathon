@@ -203,6 +203,10 @@ If the user clearly wants to move to a screen, set action to one of these codes:
 If there is no clear navigation intent, set action to null.
 Return JSON only: {"reply":"message shown to the user","action":"ACTION_CODE or null"}\`;
 
+  if (env.ENABLE_GEMINI !== "true") {
+    return json({ success: true, ...getFallbackChatResponse(message) });
+  }
+
   try {
     const raw = await callGemini(
       env,
@@ -218,7 +222,6 @@ Return JSON only: {"reply":"message shown to the user","action":"ACTION_CODE or 
 
     return json({ success: true, reply, action });
   } catch (error) {
-    console.error(error);
     return json({ success: true, ...getFallbackChatResponse(message) });
   }
 }
