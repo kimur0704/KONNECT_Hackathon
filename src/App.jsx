@@ -77,7 +77,7 @@ const translations = {
     navAlerts: '알림',
     navSettings: '설정',
     languageButton: '언어설정',
-    aiHelpButton: 'AI 도움',
+    aiHelpButton: '손녀딸',
     singerHeader: '팬덤 스테이션',
     singerHero: '오늘의 응원을 함께 준비해요',
     voteCardTitle: '투표 링크 모음',
@@ -99,9 +99,9 @@ const translations = {
     settingsTitle: '마이페이지',
     fontTitle: '글자 크기',
     back: '뒤로가기',
-    assistantTitle: 'AI 도움',
+    assistantTitle: '손녀딸',
     assistantIntro: '서비스 안내',
-    assistantHeadline: '팬 활동을 빠르게 찾도록 돕는 안내 영역',
+    assistantHeadline: '할머니 팬 활동을 옆에서 도와드릴게요',
     assistantVoteTitle: '투표와 인증 안내',
     assistantVoteText: '투표 링크 위치, 인증글 작성 흐름, 명예의 전당 반영 기준을 안내하는 영역입니다.',
     assistantScheduleTitle: '스케줄과 모임 찾기',
@@ -193,7 +193,7 @@ const translations = {
     navAlerts: 'Alerts',
     navSettings: 'Settings',
     languageButton: 'Language',
-    aiHelpButton: 'AI help',
+    aiHelpButton: 'Granddaughter',
     singerHeader: 'Fan station',
     singerHero: 'Let’s prepare today’s support together',
     voteCardTitle: 'Vote links',
@@ -215,7 +215,7 @@ const translations = {
     settingsTitle: 'My page',
     fontTitle: 'Font size',
     back: 'Back',
-    assistantTitle: 'AI help',
+    assistantTitle: 'Granddaughter',
     assistantIntro: 'Service guide',
     assistantHeadline: 'A guide area for finding fan activities quickly',
     assistantVoteTitle: 'Voting and certificates',
@@ -309,7 +309,7 @@ const translations = {
     navAlerts: '通知',
     navSettings: '設定',
     languageButton: '言語設定',
-    aiHelpButton: 'AIヘルプ',
+    aiHelpButton: '孫娘',
     singerHeader: 'ファンステーション',
     singerHero: '今日の応援を一緒に準備しよう',
     voteCardTitle: '投票リンク',
@@ -331,7 +331,7 @@ const translations = {
     settingsTitle: 'マイページ',
     fontTitle: '文字サイズ',
     back: '戻る',
-    assistantTitle: 'AIヘルプ',
+    assistantTitle: '孫娘',
     assistantIntro: 'サービス案内',
     assistantHeadline: 'ファン活動を素早く見つけるための案内エリア',
     assistantVoteTitle: '投票と認証案内',
@@ -425,7 +425,7 @@ const translations = {
     navAlerts: '通知',
     navSettings: '设置',
     languageButton: '语言设置',
-    aiHelpButton: 'AI 帮助',
+    aiHelpButton: '孙女',
     singerHeader: '粉丝站',
     singerHero: '一起为今天的应援做准备',
     voteCardTitle: '投票链接',
@@ -447,7 +447,7 @@ const translations = {
     settingsTitle: '我的页面',
     fontTitle: '字体大小',
     back: '返回',
-    assistantTitle: 'AI 帮助',
+    assistantTitle: '孙女',
     assistantIntro: '服务指南',
     assistantHeadline: '帮助快速找到粉丝活动的指南区域',
     assistantVoteTitle: '投票与认证指南',
@@ -1033,7 +1033,7 @@ function AiHelpPage({ onBack, dict, onNavigateAction }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: '안녕하세요! 게시판, 투표 인증, 언어 설정, 마이페이지 이동을 도와드릴게요.',
+      content: '할머니, 안녕하세요. 손녀딸이에요. 게시판, 투표 인증, 언어 설정, 마이페이지 이동을 옆에서 도와드릴게요.',
     },
   ])
   const [input, setInput] = useState('')
@@ -1089,7 +1089,7 @@ function AiHelpPage({ onBack, dict, onNavigateAction }) {
     <div className="app">
       <header className="top-header">
         <div>
-          <p className="small-text">ASSISTANT</p>
+          <p className="small-text">GRANDDAUGHTER</p>
           <h1>{dict.assistantTitle}</h1>
         </div>
         <button className="language-button" type="button" onClick={onBack}>
@@ -1098,6 +1098,19 @@ function AiHelpPage({ onBack, dict, onNavigateAction }) {
       </header>
 
       <main className="page-content">
+        <section className="section">
+          <div className="assistant-profile-card">
+            <div className="assistant-profile-photo">
+              <img src="/assistants/granddaughter.jpg" alt="손녀딸 AI비서 프로필" />
+            </div>
+            <div>
+              <p>{dict.assistantIntro}</p>
+              <h2>{dict.assistantTitle}</h2>
+              <span>{dict.assistantHeadline}</span>
+            </div>
+          </div>
+        </section>
+
         <section className="section">
           <div className="ai-chat-panel">
             <div className="ai-chat-messages">
