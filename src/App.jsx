@@ -77,7 +77,7 @@ const translations = {
     navAlerts: '알림',
     navSettings: '설정',
     languageButton: '언어설정',
-    aiHelpButton: '손녀딸',
+    aiHelpButton: 'AI 도움',
     singerHeader: '팬덤 스테이션',
     singerHero: '오늘의 응원을 함께 준비해요',
     voteCardTitle: '투표 링크 모음',
@@ -193,7 +193,7 @@ const translations = {
     navAlerts: 'Alerts',
     navSettings: 'Settings',
     languageButton: 'Language',
-    aiHelpButton: 'Granddaughter',
+    aiHelpButton: 'AI Help',
     singerHeader: 'Fan station',
     singerHero: 'Let’s prepare today’s support together',
     voteCardTitle: 'Vote links',
@@ -309,7 +309,7 @@ const translations = {
     navAlerts: '通知',
     navSettings: '設定',
     languageButton: '言語設定',
-    aiHelpButton: '孫娘',
+    aiHelpButton: 'AIヘルプ',
     singerHeader: 'ファンステーション',
     singerHero: '今日の応援を一緒に準備しよう',
     voteCardTitle: '投票リンク',
@@ -425,7 +425,7 @@ const translations = {
     navAlerts: '通知',
     navSettings: '设置',
     languageButton: '语言设置',
-    aiHelpButton: '孙女',
+    aiHelpButton: 'AI帮助',
     singerHeader: '粉丝站',
     singerHero: '一起为今天的应援做准备',
     voteCardTitle: '投票链接',
@@ -1033,7 +1033,7 @@ function AiHelpPage({ onBack, dict, onNavigateAction }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: '할머니, 안녕하세요. 손녀딸이에요. 게시판, 투표 인증, 언어 설정, 마이페이지 이동을 옆에서 도와드릴게요.',
+      content: '할머니, 안녕하세요. 게시판, 투표 인증, 언어 설정, 마이페이지 이동을 옆에서 도와드릴게요.',
     },
   ])
   const [input, setInput] = useState('')

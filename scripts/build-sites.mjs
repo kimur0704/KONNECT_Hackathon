@@ -174,7 +174,7 @@ function getFallbackChatResponse(message) {
 
   if (hasAny("채팅", "ai", "도움", "챗봇", "chat")) {
     return {
-      reply: "할머니, 손녀딸이에요. 지금은 기본 안내 모드로 동작하지만, 게시판과 설정 같은 주요 화면 이동은 도와드릴 수 있어요.",
+      reply: "할머니, 지금은 기본 안내 모드로 동작하지만, 게시판과 설정 같은 주요 화면 이동은 도와드릴 수 있어요.",
       action: "OPEN_CHAT",
     };
   }
