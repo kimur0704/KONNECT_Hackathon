@@ -1033,7 +1033,7 @@ function AiHelpPage({ onBack, dict, onNavigateAction }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: '할머니, 안녕하세요. 게시판, 투표 인증, 언어 설정, 마이페이지 이동을 옆에서 도와드릴게요.',
+      content: '할머니, 안녕하세요. 하고 싶은 걸 편하게 말씀해주시면 옆에서 도와드릴게요.',
     },
   ])
   const [input, setInput] = useState('')
